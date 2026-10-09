@@ -65,7 +65,7 @@ export function AccountBrowser({ accounts }: { accounts: DeskAccount[] }) {
           </span>
           <Input
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onValueChange={(value) => setQuery(value)}
             placeholder="Name, CIN, place, or product"
             className="h-10 bg-card"
           />
