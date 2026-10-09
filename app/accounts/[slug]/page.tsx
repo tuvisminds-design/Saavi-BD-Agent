@@ -8,7 +8,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { accounts, getAccount } from "@/lib/accounts"
-import { scoreOf, tierOf } from "@/lib/qualification"
+import { decisionSentence, scoreOf, tierOf } from "@/lib/qualification"
 
 export function generateStaticParams() {
   return accounts.map((account) => ({ slug: account.slug }))
@@ -93,10 +93,32 @@ export default async function AccountPage({
       <section className="mt-8">
         <h2 className="font-heading text-2xl">Qualification math</h2>
         <p className="mt-2 max-w-3xl text-muted-foreground">
-          The score is the sum of these rows. Open each source and match the
-          sentence before you use the number.
+          {decisionSentence(account)} The headline number is the sum of the
+          factor points
+          {account.penalty > 0 ? `, minus ${account.penalty} for competitive overlap` : ""}.
         </p>
-        <div className="mt-4 overflow-x-auto rounded-xl ring-1 ring-foreground/10">
+        <p className="mt-3 font-mono text-sm">
+          {account.factors.map((factor) => factor.points).join(" + ")}
+          {account.penalty > 0 ? ` − ${account.penalty}` : ""} = {score}
+        </p>
+        <div className="mt-4 grid gap-3 md:hidden">
+          {account.factors.map((factor) => (
+            <Card key={factor.id} size="sm">
+              <CardHeader>
+                <CardTitle>
+                  {factor.label} · {factor.points}/{factor.max}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-2">
+                <p>{factor.justification}</p>
+                <a className="underline underline-offset-4" href={factor.sourceUrl} rel="noreferrer" target="_blank">
+                  {factor.sourceLabel}
+                </a>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="mt-4 hidden overflow-x-auto rounded-xl ring-1 ring-foreground/10 md:block">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-muted text-muted-foreground">
               <tr>
@@ -111,8 +133,7 @@ export default async function AccountPage({
                 <tr key={factor.id} className="border-t border-border align-top">
                   <td className="px-3 py-3 font-medium">{factor.label}</td>
                   <td className="px-3 py-3 whitespace-nowrap">
-                    {factor.points}
-                    {factor.max > 0 ? ` / ${factor.max}` : ""}
+                    {factor.points} / {factor.max}
                   </td>
                   <td className="px-3 py-3 leading-relaxed">{factor.justification}</td>
                   <td className="px-3 py-3">
@@ -127,6 +148,23 @@ export default async function AccountPage({
                   </td>
                 </tr>
               ))}
+              {account.penalty > 0 ? (
+                <tr className="border-t border-border align-top">
+                  <td className="px-3 py-3 font-medium">Competitor penalty</td>
+                  <td className="px-3 py-3 whitespace-nowrap">−{account.penalty}</td>
+                  <td className="px-3 py-3 leading-relaxed">
+                    The company sells industrial or building automation, so this line is subtracted and the tier is Hold.
+                  </td>
+                  <td className="px-3 py-3 text-muted-foreground">Applied in the scorer</td>
+                </tr>
+              ) : null}
+              <tr className="border-t border-border bg-muted/60">
+                <td className="px-3 py-3 font-medium">Score</td>
+                <td className="px-3 py-3 font-medium">{score}</td>
+                <td className="px-3 py-3" colSpan={2}>
+                  {tierOf(account) === "pursue" ? "Pursue" : tierOf(account) === "verify" ? "Verify" : "Hold"}
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>

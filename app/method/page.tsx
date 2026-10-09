@@ -20,9 +20,9 @@ export default function MethodPage() {
             <CardTitle>Pursue</CardTitle>
           </CardHeader>
           <CardContent className="leading-relaxed">
-            Pune operating presence is full, the sector is heavy equipment or
+            Pune presence is not none, the sector is core heavy equipment or
             process equipment, revenue is audited and at least ₹500 crore, and
-            the score is 75 or more.
+            the score is 75 or more. A competitor never reaches this tier.
           </CardContent>
         </Card>
         <Card>
@@ -30,9 +30,9 @@ export default function MethodPage() {
             <CardTitle>Verify</CardTitle>
           </CardHeader>
           <CardContent className="leading-relaxed">
-            The score is at least 60, or Pune is only a named site, or revenue
-            is a published band rather than a rupee figure. Read the missing
-            document before a meeting.
+            The account missed Pursue, and either the score is at least 60, or
+            Pune is only partial, or revenue is a band, or the figure comes
+            from a rating rationale rather than the company’s own filing.
           </CardContent>
         </Card>
         <Card>
@@ -40,9 +40,9 @@ export default function MethodPage() {
             <CardTitle>Hold</CardTitle>
           </CardHeader>
           <CardContent className="leading-relaxed">
-            Revenue is missing or in conflict, or the company sells automation
-            and overlaps with IB-X. A high factory count does not override a
-            failed gate.
+            The company sells industrial automation, revenue is missing or in
+            conflict, or the score sits below the verify line with no partial
+            gate. A plant in Pune does not override a failed revenue gate.
           </CardContent>
         </Card>
       </div>
@@ -72,9 +72,17 @@ export default function MethodPage() {
           </table>
         </div>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-          Revenue points use the audited figure: 20 at ₹10,000 crore or more, 18
-          from ₹5,000 crore, 15 from ₹1,000 crore. A band without a rupee amount
-          scores 6 and does not pass the audited gate. A conflict scores 0.
+          Revenue points are computed in code from the gate and the crore
+          figure. Audited revenue of at least ₹5,000 crore scores 20. Audited
+          revenue of at least ₹1,000 crore and under ₹5,000 crore scores 16.
+          Audited revenue of at least ₹500 crore and under ₹1,000 crore scores
+          12. A rating-agency figure scores two points under the audited band
+          it would have earned, and it does not clear the audited gate. A band
+          with no exact rupee amount scores 6. A conflict, an undated
+          foreign-currency claim, or no filing scores 0. The other six factors
+          are assessed against the maxima above. If the company sells
+          industrial or building automation, subtract 15 after the sum and
+          force Hold.
         </p>
       </section>
 
@@ -82,9 +90,9 @@ export default function MethodPage() {
         <h2 className="font-heading text-2xl">What this desk does not do</h2>
         <div className="mt-3 flex flex-col gap-3 leading-relaxed">
           <p>
-            It does not log in to LinkedIn, automate a browser against LinkedIn,
-            or collect profiles in bulk. That would break LinkedIn’s terms and
-            it is not a source you can drop into an audit file.
+            LinkedIn’s terms prohibit scraping, login automation, and bulk
+            collection of profiles. This desk does none of that. It does not
+            store a LinkedIn URL. A profile snippet is not a current title.
           </p>
           <p>
             Names appear only when an annual report, an exchange filing, a

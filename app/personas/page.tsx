@@ -1,88 +1,206 @@
+import Link from "next/link"
+
 import { SiteShell } from "@/components/site-shell"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { accounts } from "@/lib/accounts"
 
-const personas = [
-  {
-    title: "Economic buyer",
-    who: "Managing director, chief executive, or chairman who still runs operations.",
-    pain: "Plants and project sites lose days between a request, an approval, and the update in the system of record. A chatbot that only answers does not move that work.",
-    say: "IB-X finishes the job: it captures the request, routes the approval with an SLA, updates the application, and keeps an audit trail. Thermax’s MD has already said digital execution is how project risk shows up earlier. Use that kind of sentence, tied to their filing, not a generic AI pitch.",
-  },
-  {
-    title: "Finance owner",
-    who: "CFO, or a finance director who also runs shared services.",
-    pain: "Invoice packs, credit holds, three-way match, and export documents sit in mail and spreadsheets. The cost is cycle time and audit effort, which a CFO already measures.",
-    say: "Lead with the finance and shared-services remit. Rajendran Arunachalam at Thermax and Soma Ghosh at Cummins are the pattern: named finance officers, public sources, a process they already own. At Cummins, on 9 October 2026, finance is the live buyer because the MD seat is empty until 1 November.",
-  },
-  {
-    title: "Technical buyer",
-    who: "Chief digital and information officer, or the CIO if a filing or the company page names one.",
-    pain: "Bots break on messy plant data. Separate chat, workflow, and RPA tools leave no single log. Plant systems often have to stay on the local network.",
-    say: "IB-X runs conversational capture, workflow, and RPA in one governed platform, including a local agent behind the firewall. Only Thermax publishes a CDIO in this set, Dr. Amit Sethi. Where no CIO is named, say so. Do not fill the seat from a profile snippet.",
-  },
-  {
-    title: "Process owner",
-    who: "Head of industrial products, projects, distribution, operations and maintenance, or supply chain.",
-    pain: "Work orders, material shortages, vendor dates, and service jobs bounce between procurement, finance, and the plant.",
-    say: "Suzlon’s operations-and-maintenance book was ₹2,483.85 crore in FY26. Cummins distribution sales were ₹3,278 crore. Those are the workflows to map in the first meeting: one queue, an SLA, and a human review when the document is wrong.",
-  },
-]
+export const metadata = {
+  title: "Personas",
+}
+
+function people(role: string) {
+  return accounts.flatMap((account) =>
+    account.people
+      .filter((person) => person.buyingRole === role && person.name !== "Not named")
+      .map((person) => ({ person, account })),
+  )
+}
 
 export default function PersonasPage() {
+  const economic = people("Economic buyer")
+  const technical = people("Technical buyer")
+  const process = people("Process owner")
+  const gaps = accounts.flatMap((account) =>
+    account.people
+      .filter((person) => person.buyingRole === "Role gap")
+      .map((person) => ({ person, account })),
+  )
+
   return (
     <SiteShell current="/personas">
       <div className="flex max-w-3xl flex-col gap-3">
         <h1 className="font-heading text-4xl">Who buys IB-X in this market</h1>
-        <p className="text-lg text-muted-foreground">
-          IntelliBuddies sells a governed platform that joins conversational AI,
-          workflow, and RPA so a request becomes finished work. In Pune heavy
-          equipment, the buyer is not a digital novelty seeker. It is the person
-          who still carries approvals, plant updates, and the audit file.
+        <p className="text-lg leading-relaxed text-muted-foreground">
+          IB-X joins conversational AI, workflow, and RPA, and it can run
+          on-prem with connectors into SAP, Oracle, and Microsoft 365. In Pune
+          heavy equipment the buyer is the person who still carries approvals,
+          plant updates, and the audit file.
         </p>
       </div>
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
-        {personas.map((persona) => (
-          <Card key={persona.title}>
+
+      <Tabs className="mt-8" defaultValue="economic">
+        <TabsList className="h-auto flex-wrap">
+          <TabsTrigger value="economic">Economic buyer</TabsTrigger>
+          <TabsTrigger value="technical">Technical buyer</TabsTrigger>
+          <TabsTrigger value="process">Process owner</TabsTrigger>
+          <TabsTrigger value="champion">Champion</TabsTrigger>
+          <TabsTrigger value="anti">Anti-persona</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="economic" className="mt-4">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-xl">{persona.title}</CardTitle>
+              <CardTitle>CFO, managing director, or the chair who still runs the business</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3 text-sm leading-relaxed">
               <p>
-                <span className="font-medium text-foreground">Who. </span>
-                {persona.who}
+                This seat owns budget, shared services, and the audit trail.
+                Open with cycle time on invoices, project files, and export
+                documents, not with a model name.
               </p>
               <p>
-                <span className="font-medium text-foreground">What hurts. </span>
-                {persona.pain}
+                At Cummins India on 9 October 2026 the MD seat is vacant until
+                1 November. The live economic conversation is with the CFO.
               </p>
+              <ul className="flex flex-col gap-2">
+                {economic.map(({ person, account }) => (
+                  <li key={`${account.slug}-${person.name}`}>
+                    <Link className="underline underline-offset-4" href={`/accounts/${account.slug}`}>
+                      {person.name}
+                    </Link>
+                    <span className="text-muted-foreground">
+                      {" "}
+                      · {person.title} · {account.name} · {person.evidenceGrade}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="technical" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>CIO or chief digital and information officer</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm leading-relaxed">
               <p>
-                <span className="font-medium text-foreground">How to open. </span>
-                {persona.say}
+                This seat decides whether a bot can reach SAP, Oracle, or
+                Microsoft 365, and whether it has to stay on the plant network.
+                Only one technical buyer is named on a company page in this file.
+              </p>
+              <ul className="flex flex-col gap-2">
+                {technical.map(({ person, account }) => (
+                  <li key={`${account.slug}-${person.name}`}>
+                    <Link className="underline underline-offset-4" href={`/accounts/${account.slug}`}>
+                      {person.name}
+                    </Link>
+                    <span className="text-muted-foreground">
+                      {" "}
+                      · {person.title} · {account.name}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p className="font-medium">Seats left blank on purpose</p>
+              <ul className="flex flex-col gap-2">
+                {gaps.map(({ person, account }) => (
+                  <li key={`${account.slug}-${person.title}`}>
+                    <Link className="underline underline-offset-4" href={`/accounts/${account.slug}`}>
+                      {account.name}
+                    </Link>
+                    <span className="text-muted-foreground"> · {person.why}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="process" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Supply chain, projects, operations and maintenance, shared services</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm leading-relaxed">
+              <p>
+                This is the person who lives in work orders, vendor dates, and
+                service jobs. A named process owner is rare in the filings.
+                Where the file names one, use that name. Where it does not, map
+                the process in the first meeting instead of inventing a title.
+              </p>
+              <ul className="flex flex-col gap-2">
+                {process.map(({ person, account }) => (
+                  <li key={`${account.slug}-${person.name}`}>
+                    <Link className="underline underline-offset-4" href={`/accounts/${account.slug}`}>
+                      {person.name}
+                    </Link>
+                    <span className="text-muted-foreground">
+                      {" "}
+                      · {person.title} · {account.name}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p>
+                Suzlon’s operations-and-maintenance revenue was ₹2,483.85 crore
+                in FY26. That book is the process, even though the factsheet
+                does not name the service head.
               </p>
             </CardContent>
           </Card>
-        ))}
-      </div>
-      <Card className="mt-4">
-        <CardHeader>
-          <CardTitle>Leave these out of the first list</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-2 text-sm leading-relaxed text-muted-foreground">
-          <p>
-            Companies that sell industrial automation, such as Honeywell
-            Automation India, overlap with IB-X. They stay on Hold.
-          </p>
-          <p>
-            Companies whose revenue is a band, an interview, or a conflict
-            between websites stay on Hold or Verify until the MCA statement or
-            the annual report is opened.
-          </p>
-          <p>
-            A sales office with no plant, headquarters, or named engineering
-            centre in Pune is outside this pass.
-          </p>
-        </CardContent>
-      </Card>
+        </TabsContent>
+
+        <TabsContent value="champion" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Business excellence</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm leading-relaxed">
+              <p>
+                The champion is usually a business-excellence or transformation
+                lead who will sit with a pilot. No filing in this set names
+                that person. The seat is open on every dossier.
+              </p>
+              <p>
+                Ashish Bhandari’s remark on digital execution, and Amit
+                Kalyani’s AI incubation lab, are public signals. Both men are
+                already scored as economic buyers. They are not scored again as
+                champions.
+              </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="anti" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Do not pursue these patterns</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm leading-relaxed">
+              <p>
+                Industrial-automation vendors overlap with IB-X. Honeywell
+                Automation India is on Hold for that reason. A partner
+                conversation is the only use of that file.
+              </p>
+              <p>
+                Unverified revenue stays on Hold: SANY India, John Deere India,
+                and Forbes Marshall. A band or a rating rationale, as with JCB
+                India and Alfa Laval India, stays on Verify.
+              </p>
+              <p>
+                No Pune site means the account is outside this pass. JCB’s Pune
+                fact is an engineering centre only, so the gate is partial.
+                Suzlon’s registered office is Ahmedabad and its corporate
+                headquarters is in Pune, which is enough presence, with that
+                split stated on the dossier.
+              </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </SiteShell>
   )
 }

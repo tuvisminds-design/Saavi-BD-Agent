@@ -44,7 +44,7 @@ export function penaltyOf(account: Account) {
 }
 
 export function scoreOf(account: Account) {
-  return baseScoreOf(account)
+  return baseScoreOf(account) - penaltyOf(account)
 }
 
 export function tierOf(account: Account): Tier {

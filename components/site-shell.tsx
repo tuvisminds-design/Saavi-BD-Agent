@@ -1,9 +1,8 @@
 import Link from "next/link"
-import reactPackage from "react/package.json"
 
 import { buttonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import { COMPILED_ON } from "@/lib/qualification"
+import { cn } from "@/lib/utils"
 
 const links = [
   { href: "/", label: "Desk" },
@@ -52,10 +51,8 @@ export function SiteShell({
       <main className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-10">{children}</main>
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-sm text-muted-foreground md:flex-row md:justify-between md:px-6">
-          <p>Compiled {COMPILED_ON}. Every figure on this desk has a source link.</p>
-          <p>
-            Node {process.version} · React {reactPackage.version}
-          </p>
+          <p>Compiled {COMPILED_ON}. Every scored figure has a source you can open.</p>
+          <p>LinkedIn is not scraped. Profiles are not a source on this desk.</p>
         </div>
       </footer>
     </div>

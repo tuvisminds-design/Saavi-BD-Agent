@@ -1459,3 +1459,5 @@ export function evidenceGap() {
       account.revenueGate === "conflict" || account.revenueGate === "unverified",
   )
 }
+
+export { desk as accounts }
