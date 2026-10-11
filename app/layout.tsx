@@ -1,17 +1,17 @@
 import type { Metadata } from "next"
-import { Fraunces, Source_Sans_3 } from "next/font/google"
+import { Inter, Playfair_Display } from "next/font/google"
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 
 import "./globals.css"
 
-const sans = Source_Sans_3({
+const sans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 })
 
-const heading = Fraunces({
+const heading = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-serif",
 })

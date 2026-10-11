@@ -23,7 +23,7 @@ export function SiteShell({
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 md:flex-row md:items-end md:justify-between md:px-6">
           <div>
-            <p className="text-xs tracking-[0.16em] text-muted-foreground uppercase">
+            <p className="text-xs tracking-[0.16em] text-primary uppercase">
               Saavi · corporate gifting · ₹500–1,000 crore
             </p>
             <Link href="/" className="font-heading text-2xl text-foreground">
