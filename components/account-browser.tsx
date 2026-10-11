@@ -77,7 +77,7 @@ function AccountList({
         account.location,
         account.whatTheyMake,
         account.revenueLabel,
-        account.ibxFit,
+        account.giftFit,
         account.cutoffReason,
         people,
       ]
@@ -98,7 +98,7 @@ function AccountList({
           <Input
             value={query}
             onValueChange={(value) => onQuery(value)}
-            placeholder="Name, place, or product"
+            placeholder="Name, city, or person"
             className="h-10 bg-card"
           />
         </label>

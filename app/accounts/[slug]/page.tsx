@@ -23,7 +23,7 @@ export default async function AccountPage({
 
   const score = scoreOf(account)
   const tier = tierOf(account)
-  const peopleSearch = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(`${account.name} Managing Director`)}`
+  const peopleSearch = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(`${account.name} Head of Human Resources`)}`
 
   return (
     <SiteShell current="/accounts">
@@ -63,7 +63,7 @@ export default async function AccountPage({
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>What they make</CardTitle>
+            <CardTitle>What the organisation does</CardTitle>
           </CardHeader>
           <CardContent>{account.whatTheyMake}</CardContent>
         </Card>
@@ -79,9 +79,9 @@ export default async function AccountPage({
       ) : null}
 
       <section className="mt-8">
-        <h2 className="font-heading text-2xl">Persona in one pass</h2>
+        <h2 className="font-heading text-2xl">Where Saavi sits</h2>
         <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
-          {account.ibxFit}
+          {account.giftFit}
         </p>
         <p className="mt-3">
           <a
@@ -137,8 +137,8 @@ export default async function AccountPage({
           </div>
         ) : (
           <p className="mt-3 max-w-3xl text-muted-foreground">
-            No company page is stored. The account is already cut off on
-            revenue or sector, so do not start a LinkedIn pass.
+            No company page is stored. The account is already cut off, so
+            do not start a LinkedIn pass.
           </p>
         )}
       </section>
@@ -151,7 +151,7 @@ export default async function AccountPage({
               No person is named from a company page or a filing in this file.
               {tier === "cutoff"
                 ? " Leave it that way."
-                : " Use the search, then keep a profile only when the title matches MD, CEO, or CFO."}
+                : " Use the search, then keep a profile only when the title matches HR, CEO, or CFO."}
             </p>
             {tier !== "cutoff" ? (
               <a
@@ -160,7 +160,7 @@ export default async function AccountPage({
                 rel="noreferrer"
                 target="_blank"
               >
-                Search LinkedIn for a managing director
+                Search LinkedIn for the HR head
               </a>
             ) : null}
           </div>

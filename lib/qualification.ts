@@ -1,4 +1,4 @@
-import type { Account, SectorFit, Tier } from "@/lib/types"
+import type { Account, HrFit, Tier } from "@/lib/types"
 
 export const COMPILED_ON = "11 October 2026"
 
@@ -11,9 +11,9 @@ export const MEDIUM_LINE = 0.5
 
 export const FACTOR_GUIDE = [
   { id: "revenue", label: "Moneycontrol band", max: 20 },
-  { id: "sector", label: "Heavy or process equipment", max: 25 },
+  { id: "hr", label: "HR in the organisation", max: 25 },
   { id: "pune", label: "Pune operating weight", max: 15 },
-  { id: "persona", label: "Persona already named", max: 20 },
+  { id: "persona", label: "HR, CEO, and CFO named", max: 20 },
   { id: "linkedin", label: "LinkedIn verification", max: 20 },
 ] as const
 
@@ -30,7 +30,7 @@ export function formatScore(score: number) {
 }
 
 export function tierOf(account: Account): Tier {
-  if (!account.inBand || account.sectorFit === "other") return "cutoff"
+  if (!account.inBand || account.hrFit === "none") return "cutoff"
   const score = scoreOf(account)
   if (score > HIGH_LINE) return "high"
   if (score >= MEDIUM_LINE) return "medium"
@@ -43,23 +43,23 @@ export function tierLabel(tier: Tier) {
   return "Cut off"
 }
 
-export function sectorLabel(fit: SectorFit) {
-  if (fit === "equipment") return "Process or heavy equipment"
-  if (fit === "industrial") return "Industrial machinery"
-  return "Not equipment"
+export function hrLabel(fit: HrFit) {
+  if (fit === "named") return "HR head named"
+  if (fit === "function") return "HR function, current head not named"
+  return "No HR evidence in this file"
 }
 
 export function decisionSentence(account: Account) {
   const score = formatScore(scoreOf(account))
   if (!account.inBand) {
-    return `Moneycontrol sales are outside ₹${BAND_LOW}–${BAND_HIGH} crore, so the account is cut off before the ${score} factor score can put it on a call list.`
+    return `The deciding sales figure is outside ₹${BAND_LOW}–${BAND_HIGH} crore, so the account is cut off. The factor score of ${score} does not put it on a call list.`
   }
-  if (account.sectorFit === "other") {
-    return `The revenue band passes, and the factor score is ${score}, but the company is not heavy equipment or industrial machinery. Random ₹${BAND_LOW}–${BAND_HIGH} crore names are cut here.`
+  if (account.hrFit === "none") {
+    return `The revenue band passes, and the factor score is ${score}. No company page or filing in this file shows an HR seat, so the account is cut off.`
   }
   const tier = tierOf(account)
   if (tier === "high") {
-    return `The score is ${score}, above ${HIGH_LINE.toFixed(2)}. Revenue, equipment fit, a named buyer, and a LinkedIn company check all clear. This is a highly qualified lead.`
+    return `The score is ${score}, above ${HIGH_LINE.toFixed(2)}. The Moneycontrol band, a named HR head, the CEO and the CFO, and a LinkedIn company check all clear. This is a highly qualified lead.`
   }
   if (tier === "medium") {
     return `The score is ${score}, inside ${MEDIUM_LINE.toFixed(2)}–${HIGH_LINE.toFixed(2)}. Keep it, and close the gap named on the dossier before a proposal.`

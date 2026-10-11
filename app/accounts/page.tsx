@@ -19,9 +19,10 @@ export default async function AccountsPage({
       <div className="mb-6 max-w-3xl">
         <h1 className="font-heading text-4xl">Accounts</h1>
         <p className="mt-3 text-muted-foreground">
-          Five accounts stay on the call list. The rest are here so a random
-          ₹500–1,000 crore lead, or a famous plant above ₹1,000 crore, can be
-          cut off with the Moneycontrol line still open.
+          Highly qualified and medium accounts stay on the call list. Cut
+          off stays in the file so an over-band name, a standalone-sales trap,
+          or an in-band company with no public HR seat can be checked against
+          the source.
         </p>
       </div>
       <AccountBrowser accounts={queryAccounts({}).accounts} initialTier={initialTier} />

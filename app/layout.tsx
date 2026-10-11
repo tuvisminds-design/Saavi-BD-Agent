@@ -17,9 +17,9 @@ const heading = Fraunces({
 })
 
 export const metadata: Metadata = {
-  title: "Pune lead qualification desk",
+  title: "Saavi lead qualification desk",
   description:
-    "Persona, qualification, and decision-maker summaries for IntelliBuddies in Pune heavy equipment and large manufacturers.",
+    "Persona, qualification, and decision-maker summaries for Saavi. HR, CEO, and CFO at Indian companies inside the Moneycontrol ₹500–1,000 crore band.",
 }
 
 export default function RootLayout({

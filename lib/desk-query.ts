@@ -44,7 +44,7 @@ export function queryAccounts(input: {
       account.location,
       account.whatTheyMake,
       account.revenueLabel,
-      account.ibxFit,
+      account.giftFit,
       account.cutoffReason,
       people,
     ]

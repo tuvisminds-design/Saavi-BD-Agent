@@ -1,8 +1,9 @@
 export type Tier = "high" | "medium" | "cutoff"
 
-export type SectorFit = "equipment" | "industrial" | "other"
+/** Named head, an HR function whose current head is not named, or no evidence. */
+export type HrFit = "named" | "function" | "none"
 
-export type FactorId = "revenue" | "sector" | "pune" | "persona" | "linkedin"
+export type FactorId = "revenue" | "hr" | "pune" | "persona" | "linkedin"
 
 export type Factor = {
   id: FactorId
@@ -14,11 +15,7 @@ export type Factor = {
   sourceUrl: string
 }
 
-export type BuyingRole =
-  | "Economic buyer"
-  | "Finance owner"
-  | "Technical buyer"
-  | "Process owner"
+export type BuyingRole = "Chief executive" | "Finance owner" | "HR owner"
 
 export type DecisionMaker = {
   name: string
@@ -39,17 +36,17 @@ export type Account = {
   website: string
   location: string
   whatTheyMake: string
-  /** Latest annual sales used by the gate, in ₹ crore, as shown on Moneycontrol. */
+  /** Latest annual sales used by the gate, in ₹ crore. Group figure when it is larger. */
   revenueCrore: number
   revenueLabel: string
   period: string
   moneycontrolUrl: string
-  /** True only when Moneycontrol's latest annual sales sit in ₹500–1,000 crore. */
+  /** True only when the deciding sales figure sits in ₹500–1,000 crore. */
   inBand: boolean
-  sectorFit: SectorFit
+  hrFit: HrFit
   linkedinCompanyUrl?: string
   linkedinConfirms?: string
-  ibxFit: string
+  giftFit: string
   factors: Factor[]
   people: DecisionMaker[]
   checklist: string[]
