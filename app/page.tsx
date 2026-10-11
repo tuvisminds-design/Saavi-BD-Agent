@@ -4,13 +4,13 @@ import { SiteShell } from "@/components/site-shell"
 import { TierBadge } from "@/components/tier-badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { byTier, tierCounts } from "@/lib/accounts"
+import { summaryPayload } from "@/lib/desk-query"
 import { formatScore, tierLabel } from "@/lib/qualification"
 
+export const dynamic = "force-dynamic"
+
 export default function HomePage() {
-  const counts = tierCounts()
-  const high = byTier("high")
-  const medium = byTier("medium")
+  const { counts, high, medium } = summaryPayload()
 
   return (
     <SiteShell current="/">
@@ -22,9 +22,9 @@ export default function HomePage() {
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
             Inbound names in this revenue band convert slowly because most of
             them are not equipment companies, and the famous Pune plants are
-            far larger than the band. This desk scores each account from 0 to
-            1. Above 0.80 is highly qualified. 0.50 to 0.80 stays in the file.
-            Under 0.50, or outside the band, is cut off.
+            far larger than the band. The Node API scores each account from 0
+            to 1. Above 0.80 is highly qualified. 0.50 to 0.80 stays in the
+            file. Under 0.50, or outside the band, is cut off.
           </p>
         </section>
 

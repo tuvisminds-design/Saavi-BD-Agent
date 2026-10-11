@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import type { DeskAccount } from "@/lib/accounts"
+import type { ScoredAccount } from "@/lib/api-types"
 import { formatScore, tierLabel } from "@/lib/qualification"
 import type { Tier } from "@/lib/types"
 
@@ -24,11 +24,37 @@ export function AccountBrowser({
   accounts,
   initialTier = "all",
 }: {
-  accounts: DeskAccount[]
+  accounts: ScoredAccount[]
   initialTier?: TierFilter
 }) {
   const [query, setQuery] = useState("")
   const [tier, setTier] = useState<TierFilter>(initialTier)
+
+  return (
+    <AccountList
+      accounts={accounts}
+      initialTier={tier}
+      onTier={setTier}
+      query={query}
+      onQuery={setQuery}
+    />
+  )
+}
+
+function AccountList({
+  accounts,
+  initialTier,
+  onTier,
+  query,
+  onQuery,
+}: {
+  accounts: ScoredAccount[]
+  initialTier: TierFilter
+  onTier: (tier: TierFilter) => void
+  query: string
+  onQuery: (value: string) => void
+}) {
+  const tier = initialTier
 
   const counts = useMemo(() => {
     return {
@@ -71,7 +97,7 @@ export function AccountBrowser({
           </span>
           <Input
             value={query}
-            onValueChange={(value) => setQuery(value)}
+            onValueChange={(value) => onQuery(value)}
             placeholder="Name, place, or product"
             className="h-10 bg-card"
           />
@@ -85,7 +111,7 @@ export function AccountBrowser({
               value === "medium" ||
               value === "cutoff"
             ) {
-              setTier(value)
+              onTier(value)
             }
           }}
         >
@@ -118,8 +144,8 @@ export function AccountBrowser({
             className="mt-4"
             variant="outline"
             onClick={() => {
-              setQuery("")
-              setTier("all")
+              onQuery("")
+              onTier("all")
             }}
           >
             Clear search

@@ -23,6 +23,13 @@ npm run dev
 
 Open [http://127.0.0.1:4179](http://127.0.0.1:4179).
 
+The React screens are rendered by the Node server. The same scores are available as JSON:
+
+- `GET /api/health`
+- `GET /api/summary`
+- `GET /api/accounts`
+- `GET /api/accounts/:slug`
+
 `npm run typecheck` checks TypeScript.
 
 ## Evidence

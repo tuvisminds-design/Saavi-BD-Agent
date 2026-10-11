@@ -51,7 +51,10 @@ export function SiteShell({
       <main className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-10">{children}</main>
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-sm text-muted-foreground md:flex-row md:justify-between md:px-6">
-          <p>Compiled {COMPILED_ON}. Revenue is the Moneycontrol sales line.</p>
+          <p>
+            Compiled {COMPILED_ON}. Desk API on Node {process.version}. Revenue
+            is the Moneycontrol sales line.
+          </p>
           <p>LinkedIn is opened to verify the company and the title. It is not scraped.</p>
         </div>
       </footer>

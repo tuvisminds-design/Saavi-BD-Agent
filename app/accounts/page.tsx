@@ -1,7 +1,9 @@
 import { AccountBrowser } from "@/components/account-browser"
 import { SiteShell } from "@/components/site-shell"
-import { accounts } from "@/lib/accounts"
+import { queryAccounts } from "@/lib/desk-query"
 import type { Tier } from "@/lib/types"
+
+export const dynamic = "force-dynamic"
 
 export default async function AccountsPage({
   searchParams,
@@ -22,7 +24,7 @@ export default async function AccountsPage({
           cut off with the Moneycontrol line still open.
         </p>
       </div>
-      <AccountBrowser accounts={accounts} initialTier={initialTier} />
+      <AccountBrowser accounts={queryAccounts({}).accounts} initialTier={initialTier} />
     </SiteShell>
   )
 }
