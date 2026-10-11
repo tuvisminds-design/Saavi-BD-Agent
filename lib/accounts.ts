@@ -1,12 +1,10 @@
 import {
-  baseScoreOf,
   FACTOR_GUIDE,
-  penaltyOf,
-  revenuePoints,
+  pointsOf,
   scoreOf,
   tierOf,
 } from "@/lib/qualification"
-import type { Account, DecisionMaker, Factor, Tier } from "@/lib/types"
+import type { Account, DecisionMaker, Factor, FactorId, Tier } from "@/lib/types"
 
 type Copy = [justification: string, sourceLabel: string, sourceUrl: string]
 
@@ -22,1415 +20,1018 @@ function buildFactors(points: number[], copies: Copy[]): Factor[] {
   }))
 }
 
-function person(
-  input: Omit<DecisionMaker, "buyingRole"> & { buyingRole: string },
-): DecisionMaker {
+function person(input: DecisionMaker): DecisionMaker {
   return input
 }
 
+const MC = "https://www.moneycontrol.com/markets/financials/profit-loss"
+
 const accounts: Account[] = [
+  {
+    slug: "anup-engineering",
+    name: "Anup Engineering",
+    legalName: "The Anup Engineering Limited",
+    website: "https://www.anupengg.com/",
+    location:
+      "Ahmedabad works, with a Vadodara engineering office named in the FY26 release. No Pune plant is in the sources used here.",
+    whatTheyMake:
+      "Static process equipment: heat exchangers, reactors, vessels, towers, tanks, and silos for oil and gas, petrochemicals, and newer energy work.",
+    revenueCrore: 822,
+    revenueLabel: "₹822 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/theanupengineering-ANUP54246/`,
+    inBand: true,
+    sectorFit: "equipment",
+    linkedinCompanyUrl: "https://www.linkedin.com/company/the-anup-engineering-limited",
+    linkedinConfirms:
+      "The company page describes a pressure-vessel and process-equipment manufacturer headquartered in Ahmedabad. LinkedIn’s revenue range is about ₹700–800 crore. Moneycontrol’s ₹822 crore sales line is the figure this desk uses.",
+    ibxFit:
+      "Each job is engineered to order: a specification, a drawing set, vendor documents, and an inspection file. That is the IB-X surface. Do not name an ERP. No source here does.",
+    factors: buildFactors(
+      [20, 25, 0, 20, 20],
+      [
+        [
+          "Moneycontrol’s consolidated sales line for Mar 2026 is ₹822 crore, inside ₹500–1,000 crore, so the band scores 0.20. The company’s own FY26 release says consolidated revenue of ₹822 crore for the same year.",
+          "Moneycontrol profit and loss, The Anup Engineering",
+          `${MC}/theanupengineering-ANUP54246/`,
+        ],
+        [
+          "Heat exchangers were 54% of the quarter’s product mix in the FY26 release, with reactors and vessels at 39%. That is process equipment, so sector scores the full 0.25.",
+          "Anup Engineering Q4 FY26 press release",
+          "https://www.anupengg.com/wp-content/uploads/2026/05/Q4-Press-release-of-31.03.2026.pdf",
+        ],
+        [
+          "The release places the works in Ahmedabad and an engineering office in Vadodara. Nothing in these sources puts a plant in Pune, so Pune scores 0.",
+          "Anup Engineering Q4 FY26 press release",
+          "https://www.anupengg.com/wp-content/uploads/2026/05/Q4-Press-release-of-31.03.2026.pdf",
+        ],
+        [
+          "The economic buyer and the finance owner are both named on public pages, so the persona does not have to be rebuilt from scratch. That scores 0.20.",
+          "MarketScreener company managers",
+          "https://www.marketscreener.com/quote/stock/THE-ANUP-ENGINEERING-LIMI-55399625/company/",
+        ],
+        [
+          "The LinkedIn company page confirms the legal name, Ahmedabad headquarters, and process-equipment manufacturing. That verification scores 0.20. Do not replace the Moneycontrol sales line with LinkedIn’s revenue range.",
+          "LinkedIn company page, The Anup Engineering Limited",
+          "https://www.linkedin.com/company/the-anup-engineering-limited",
+        ],
+      ],
+    ),
+    people: [
+      person({
+        name: "Reginaldo Dsouza",
+        title: "Managing Director and CEO",
+        buyingRole: "Economic buyer",
+        why: "He is the named chief executive. A first meeting on workflow for engineered-to-order jobs starts here, or with someone he names.",
+        linkedinUrl: "https://www.linkedin.com/in/reginaldo-dsouza-174710145",
+        linkedinNote:
+          "Public profile indexed for this name. Open it and confirm the current title still reads Managing Director and CEO at The Anup Engineering Limited.",
+        sourceLabel: "MarketScreener company managers",
+        sourceUrl:
+          "https://www.marketscreener.com/quote/stock/THE-ANUP-ENGINEERING-LIMI-55399625/company/",
+      }),
+      person({
+        name: "Nilesh Hirapara",
+        title: "Chief Financial Officer",
+        buyingRole: "Finance owner",
+        why: "Order files, inspection packs, and invoice packs sit with finance as much as with the shop. He is the named finance seat.",
+        linkedinUrl:
+          "https://www.linkedin.com/search/results/people/?keywords=Nilesh%20Hirapara%20Anup%20Engineering",
+        linkedinNote:
+          "No profile URL is stored. This opens a LinkedIn people search. Confirm the title before you write to him.",
+        sourceLabel: "MarketScreener company managers",
+        sourceUrl:
+          "https://www.marketscreener.com/quote/stock/THE-ANUP-ENGINEERING-LIMI-55399625/company/",
+      }),
+    ],
+    checklist: [
+      "Open the Moneycontrol sales line and confirm Mar 2026 still reads ₹822 crore.",
+      "Open the LinkedIn company page and confirm Ahmedabad plus process equipment. Ignore its revenue range.",
+      "Open Reginaldo Dsouza’s public profile and confirm the title.",
+      "Search Nilesh Hirapara and confirm he is still CFO before using the name in a letter.",
+      "Ask who owns engineering document control. That seat is not named in this file.",
+    ],
+  },
+  {
+    slug: "kilburn-engineering",
+    name: "Kilburn Engineering",
+    legalName: "Kilburn Engineering Limited",
+    website: "https://www.kilburnengg.com/",
+    location:
+      "LinkedIn lists the headquarters in Kolkata. These sources do not show a Pune plant.",
+    whatTheyMake:
+      "Custom thermal process equipment. The company page describes dryers and related process plant, built to a customer specification.",
+    revenueCrore: 628,
+    revenueLabel: "₹628 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/kilburnengineering-KE03/`,
+    inBand: true,
+    sectorFit: "equipment",
+    linkedinCompanyUrl: "https://www.linkedin.com/company/kilburn-engineering-ltd",
+    linkedinConfirms:
+      "The company page says industrial machinery manufacturing, custom process equipment, headquarters Kolkata. Its dollar revenue figure does not match ₹628 crore. Use Moneycontrol for revenue.",
+    ibxFit:
+      "A dryer or calciner order is a specification, a vendor list, and a commissioning file. IB-X fits that paper trail. Do not name an ERP.",
+    factors: buildFactors(
+      [20, 25, 0, 20, 20],
+      [
+        [
+          "Moneycontrol’s consolidated sales line for Mar 2026 is ₹628 crore, inside the band, so revenue scores 0.20. The prior column on the same page is ₹424 crore, which would have failed the floor. Use the latest year only.",
+          "Moneycontrol profit and loss, Kilburn Engineering",
+          `${MC}/kilburnengineering-KE03/`,
+        ],
+        [
+          "LinkedIn classifies the company as industrial machinery and describes custom thermal process equipment. That is process equipment, so sector scores 0.25.",
+          "LinkedIn company page, Kilburn Engineering Ltd",
+          "https://www.linkedin.com/company/kilburn-engineering-ltd",
+        ],
+        [
+          "Headquarters on the LinkedIn page is Kolkata. No Pune plant is stated, so Pune scores 0.",
+          "LinkedIn company page, Kilburn Engineering Ltd",
+          "https://www.linkedin.com/company/kilburn-engineering-ltd",
+        ],
+        [
+          "The company board page names the managing director and the chief financial officer, so the two seats that usually stall a first call are already filled. Persona scores 0.20.",
+          "Kilburn Engineering board of directors",
+          "https://www.kilburnengg.com/investor-relations/board-of-directors/",
+        ],
+        [
+          "The LinkedIn company page confirms the name, Kolkata, and industrial machinery. That scores 0.20. Do not use the dollar revenue shown there.",
+          "LinkedIn company page, Kilburn Engineering Ltd",
+          "https://www.linkedin.com/company/kilburn-engineering-ltd",
+        ],
+      ],
+    ),
+    people: [
+      person({
+        name: "Ranjit Lala",
+        title: "Managing Director",
+        buyingRole: "Economic buyer",
+        why: "The board page names him Managing Director. He is the economic buyer until the company says otherwise.",
+        linkedinUrl:
+          "https://www.linkedin.com/search/results/people/?keywords=Ranjit%20Lala%20Kilburn%20Engineering",
+        linkedinNote:
+          "People search only. Open a profile and match it to the board page before you use the name.",
+        sourceLabel: "Kilburn Engineering board of directors",
+        sourceUrl: "https://www.kilburnengg.com/investor-relations/board-of-directors/",
+      }),
+      person({
+        name: "Sachin Vijaykar",
+        title: "Chief Financial Officer",
+        buyingRole: "Finance owner",
+        why: "Named on the same board page as CFO. Project billing and document packs route through this seat.",
+        linkedinUrl:
+          "https://www.linkedin.com/search/results/people/?keywords=Sachin%20Vijaykar%20Kilburn",
+        linkedinNote: "People search only. Confirm the profile against the board page.",
+        sourceLabel: "Kilburn Engineering board of directors",
+        sourceUrl: "https://www.kilburnengg.com/investor-relations/board-of-directors/",
+      }),
+      person({
+        name: "Anil S. Karnad",
+        title: "Whole Time Director",
+        buyingRole: "Process owner",
+        why: "A whole-time director on the board page is the closest named operating seat. Ask which plants and order files he actually runs.",
+        linkedinUrl:
+          "https://www.linkedin.com/search/results/people/?keywords=Anil%20Karnad%20Kilburn%20Engineering",
+        linkedinNote: "People search only. Confirm he is still a whole-time director.",
+        sourceLabel: "Kilburn Engineering board of directors",
+        sourceUrl: "https://www.kilburnengg.com/investor-relations/board-of-directors/",
+      }),
+    ],
+    checklist: [
+      "Open Moneycontrol and confirm Mar 2026 consolidated sales still read ₹628 crore, not the ₹424 crore year before.",
+      "Open the LinkedIn company page. Check industry and Kolkata. Ignore the dollar revenue.",
+      "Open the board page and confirm Ranjit Lala and Sachin Vijaykar are still in those seats.",
+      "Run the three people searches and keep only profiles that match the board titles.",
+      "Ask who owns engineering IT. That seat is not on the board page.",
+    ],
+  },
+  {
+    slug: "shanthi-gears",
+    name: "Shanthi Gears",
+    legalName: "Shanthi Gears Limited",
+    website: "https://www.shanthigears.com/",
+    location: "Coimbatore. The LinkedIn company page says Tamil Nadu. Not Pune.",
+    whatTheyMake:
+      "Industrial gears and gearboxes for process, power, steel, cement, and sugar plants. This is industrial machinery, not a crane or construction-equipment OEM.",
+    revenueCrore: 518,
+    revenueLabel: "₹518 crore standalone sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/shanthigears-SG04/`,
+    inBand: true,
+    sectorFit: "industrial",
+    linkedinCompanyUrl: "https://www.linkedin.com/company/shanthigears",
+    linkedinConfirms:
+      "The company page says mechanical or industrial engineering, headquarters Coimbatore, gears for process and heavy industry. Its dollar revenue is close to, but not the same as, the Moneycontrol line. Use Moneycontrol.",
+    ibxFit:
+      "Gearbox orders are configured, quoted, and released against a drawing. The persona work is already started. The gap is Pune: there is no local plant in these sources.",
+    factors: buildFactors(
+      [20, 15, 0, 20, 20],
+      [
+        [
+          "Moneycontrol standalone sales for Mar 2026 are ₹518 crore, inside the band, so revenue scores 0.20. The Murugappa release for the same year says revenue of ₹518.72 crore.",
+          "Moneycontrol profit and loss, Shanthi Gears",
+          `${MC}/shanthigears-SG04/`,
+        ],
+        [
+          "The LinkedIn page describes industrial gears for process, power, steel, and cement. That is industrial machinery supplying heavy plants, not a heavy-equipment OEM, so sector scores 0.15 of 0.25.",
+          "LinkedIn company page, Shanthi Gears",
+          "https://www.linkedin.com/company/shanthigears",
+        ],
+        [
+          "Headquarters are Coimbatore. Pune scores 0.",
+          "LinkedIn company page, Shanthi Gears",
+          "https://www.linkedin.com/company/shanthigears",
+        ],
+        [
+          "A board disclosure reported by Business Upturn names the whole-time director and CEO and the CFO. Both seats exist, so persona scores 0.20. Confirm the exchange filing before a letter.",
+          "Business Upturn, Shanthi Gears CFO appointment",
+          "https://businessupturn.com/business/corporates/shanthi-gears-board-appoints-sai-krishna-alluri-as-chief-financial-officer-also-names-new-hr-head/",
+        ],
+        [
+          "The LinkedIn company page confirms Coimbatore and industrial gear manufacturing. That scores 0.20.",
+          "LinkedIn company page, Shanthi Gears",
+          "https://www.linkedin.com/company/shanthigears",
+        ],
+      ],
+    ),
+    people: [
+      person({
+        name: "M. Karunakaran",
+        title: "Whole-time Director and CEO",
+        buyingRole: "Economic buyer",
+        why: "Named as whole-time director and CEO in the report of the board disclosure. He is the economic buyer to verify.",
+        linkedinUrl:
+          "https://www.linkedin.com/search/results/people/?keywords=Karunakaran%20Shanthi%20Gears",
+        linkedinNote:
+          "People search only. Match the profile to the exchange filing, not to the news rewrite alone.",
+        sourceLabel: "Business Upturn, Shanthi Gears CFO appointment",
+        sourceUrl:
+          "https://businessupturn.com/business/corporates/shanthi-gears-board-appoints-sai-krishna-alluri-as-chief-financial-officer-also-names-new-hr-head/",
+      }),
+      person({
+        name: "Sai Krishna Alluri",
+        title: "Chief Financial Officer",
+        buyingRole: "Finance owner",
+        why: "The same report says the board appointed him CFO and that the interim CFO stepped down.",
+        linkedinUrl:
+          "https://www.linkedin.com/search/results/people/?keywords=Sai%20Krishna%20Alluri%20Shanthi%20Gears",
+        linkedinNote: "People search only. Confirm against the BSE filing dated 3 September.",
+        sourceLabel: "Business Upturn, Shanthi Gears CFO appointment",
+        sourceUrl:
+          "https://businessupturn.com/business/corporates/shanthi-gears-board-appoints-sai-krishna-alluri-as-chief-financial-officer-also-names-new-hr-head/",
+      }),
+    ],
+    checklist: [
+      "Open Moneycontrol and confirm Mar 2026 sales are ₹518 crore.",
+      "Open the Murugappa release and confirm ₹518.72 crore for the same year.",
+      "Open the LinkedIn company page and confirm Coimbatore and gears.",
+      "Find the 3 September exchange filing and confirm Karunakaran and Alluri before writing.",
+      "Do not pitch this as a Pune account.",
+    ],
+  },
+  {
+    slug: "kirloskar-electric",
+    name: "Kirloskar Electric",
+    legalName: "Kirloskar Electric Company Limited",
+    website: "https://kirloskarelectric.com/",
+    location:
+      "Headquarters in Bengaluru. The company board page lists Pune as a west-zone branch, with Mumbai and Surat. That is an office, not a plant.",
+    whatTheyMake:
+      "Industrial motors, generators, transformers, and switchgear. LinkedIn calls it industrial machinery. It is not a construction-equipment OEM.",
+    revenueCrore: 589,
+    revenueLabel: "₹589 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/kirloskarelectricco-KEC02/`,
+    inBand: true,
+    sectorFit: "industrial",
+    linkedinCompanyUrl: "https://www.linkedin.com/company/kirloskarelectric",
+    linkedinConfirms:
+      "The company page says industrial machinery, headquarters Bengaluru, and revenue of about ₹590 crore, which agrees with Moneycontrol’s ₹589 crore. It also lists a Pune sales office among other cities. Revenue still comes from Moneycontrol.",
+    ibxFit:
+      "Five plants and a branch network mean the same order-to-dispatch paperwork in more than one city. The missing seat is the CFO. Do not invent one, and do not invent an ERP.",
+    factors: buildFactors(
+      [20, 15, 5, 10, 20],
+      [
+        [
+          "Moneycontrol consolidated sales for Mar 2026 are ₹589 crore, inside the band, so revenue scores 0.20.",
+          "Moneycontrol profit and loss, Kirloskar Electric",
+          `${MC}/kirloskarelectricco-KEC02/`,
+        ],
+        [
+          "Motors, generators, and transformers are industrial capital goods, not cranes or process vessels. Sector scores 0.15 of 0.25.",
+          "LinkedIn company page, Kirloskar Electric",
+          "https://www.linkedin.com/company/kirloskarelectric",
+        ],
+        [
+          "The board page’s west-zone branch list includes Pune. A branch is not a plant, so Pune scores 0.05 of 0.15.",
+          "Kirloskar Electric board of directors",
+          "https://kirloskarelectric.com/investors/people/board-of-",
+        ],
+        [
+          "The executive chairman and the managing director are named. The CFO is not on that page, so persona scores 0.10 of 0.20.",
+          "Kirloskar Electric board of directors",
+          "https://kirloskarelectric.com/investors/people/board-of-",
+        ],
+        [
+          "LinkedIn confirms Bengaluru, industrial machinery, and a revenue figure in line with Moneycontrol. That scores 0.20.",
+          "LinkedIn company page, Kirloskar Electric",
+          "https://www.linkedin.com/company/kirloskarelectric",
+        ],
+      ],
+    ),
+    people: [
+      person({
+        name: "Vijay R. Kirloskar",
+        title: "Executive Chairman",
+        buyingRole: "Economic buyer",
+        why: "The board page names him Executive Chairman and describes him as the promoter directing the company. DIN 00031253 is on that page.",
+        linkedinUrl:
+          "https://www.linkedin.com/search/results/people/?keywords=Vijay%20Kirloskar%20Kirloskar%20Electric",
+        linkedinNote: "People search only. Match the profile to the board page.",
+        sourceLabel: "Kirloskar Electric board of directors",
+        sourceUrl: "https://kirloskarelectric.com/investors/people/board-of-",
+      }),
+      person({
+        name: "Anand B. Hunnur",
+        title: "Managing Director",
+        buyingRole: "Process owner",
+        why: "The board page names him Managing Director. The same page says the July 2022 appointment was for three years. Confirm the term is current.",
+        linkedinUrl:
+          "https://www.linkedin.com/search/results/people/?keywords=Anand%20Hunnur%20Kirloskar%20Electric",
+        linkedinNote: "People search only. Confirm the profile and the current term.",
+        sourceLabel: "Kirloskar Electric board of directors",
+        sourceUrl: "https://kirloskarelectric.com/investors/people/board-of-",
+      }),
+      person({
+        name: "Janaki Kirloskar",
+        title: "Joint Managing Director",
+        buyingRole: "Economic buyer",
+        why: "Named Joint Managing Director on the same board page. Treat her as a second economic seat, not as a substitute for a CFO.",
+        linkedinUrl:
+          "https://www.linkedin.com/search/results/people/?keywords=Janaki%20Kirloskar%20Kirloskar%20Electric",
+        linkedinNote: "People search only. Confirm against the board page.",
+        sourceLabel: "Kirloskar Electric board of directors",
+        sourceUrl: "https://kirloskarelectric.com/investors/people/board-of-",
+      }),
+    ],
+    checklist: [
+      "Open Moneycontrol and confirm Mar 2026 consolidated sales are ₹589 crore.",
+      "Open LinkedIn and confirm Bengaluru, industrial machinery, and that the revenue note still agrees.",
+      "On the board page, confirm Pune is still only a west-zone branch.",
+      "Confirm Anand Hunnur’s term. The page records a three-year appointment from 12 July 2022.",
+      "Ask the company who the CFO is. Do not fill that seat from a search result.",
+    ],
+  },
+  {
+    slug: "windsor-machines",
+    name: "Windsor Machines",
+    legalName: "Windsor Machines Limited",
+    website: "https://windsormachines.com/",
+    location: "LinkedIn lists the headquarters in Ahmedabad. No Pune site is in these sources.",
+    whatTheyMake:
+      "Plastic processing machinery: injection moulding machines, blown-film lines, and pipe extrusion lines.",
+    revenueCrore: 570,
+    revenueLabel: "₹570 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/windsormachines-WM01/`,
+    inBand: true,
+    sectorFit: "industrial",
+    linkedinCompanyUrl: "https://www.linkedin.com/company/windsormachinesofficial",
+    linkedinConfirms:
+      "The company page says industrial machinery manufacturing, injection moulding and extrusion, headquarters Ahmedabad. Its dollar revenue does not match ₹570 crore. Use Moneycontrol.",
+    ibxFit:
+      "Machine orders need a configuration, a dispatch file, and a service history. The persona is the open gap: this file has no MD or CFO from a company page. Spend the two minutes on LinkedIn, not on a new industry study.",
+    factors: buildFactors(
+      [20, 15, 0, 4, 20],
+      [
+        [
+          "Moneycontrol consolidated sales for Mar 2026 are ₹570 crore, inside the band, so revenue scores 0.20.",
+          "Moneycontrol profit and loss, Windsor Machines",
+          `${MC}/windsormachines-WM01/`,
+        ],
+        [
+          "The company builds industrial machines, not mobile heavy equipment. Sector scores 0.15 of 0.25.",
+          "LinkedIn company page, Windsor Machines",
+          "https://www.linkedin.com/company/windsormachinesofficial",
+        ],
+        [
+          "Headquarters are Ahmedabad. Pune scores 0.",
+          "LinkedIn company page, Windsor Machines",
+          "https://www.linkedin.com/company/windsormachinesofficial",
+        ],
+        [
+          "No managing director or CFO is named from a company page in this file, so persona scores 0.04. That is the conversion gap, not a reason to research the plastics industry again.",
+          "LinkedIn company page, Windsor Machines",
+          "https://www.linkedin.com/company/windsormachinesofficial",
+        ],
+        [
+          "LinkedIn confirms the name, Ahmedabad, and machinery manufacturing. That scores 0.20. Ignore LinkedIn’s dollar revenue.",
+          "LinkedIn company page, Windsor Machines",
+          "https://www.linkedin.com/company/windsormachinesofficial",
+        ],
+      ],
+    ),
+    people: [],
+    checklist: [
+      "Open Moneycontrol and confirm Mar 2026 consolidated sales are ₹570 crore.",
+      "Open the LinkedIn company page and confirm Ahmedabad and plastic machinery.",
+      "Use the people search below and keep a profile only if the current title is MD, CEO, or CFO.",
+      "Do not write a letter until those two seats have a company-page or filing source.",
+      "Do not treat this as a Pune heavy-equipment account.",
+    ],
+  },
+  {
+    slug: "sanghvi-movers",
+    name: "Sanghvi Movers",
+    legalName: "Sanghvi Movers Limited",
+    website: "https://www.sanghvimovers.com/",
+    location: "Registered office is not copied here. Confirm it before calling this a Pune account.",
+    whatTheyMake:
+      "Crane and heavy-lift contracting. Confirm the current fleet mix on the company site. The cut-off does not depend on that sentence.",
+    revenueCrore: 1070,
+    revenueLabel: "₹1,070 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/sanghvimovers-SM10/`,
+    inBand: false,
+    sectorFit: "equipment",
+    ibxFit: "Do not build a persona. The latest sales year is outside the band.",
+    factors: buildFactors(
+      [0, 0, 0, 0, 0],
+      [
+        [
+          "Moneycontrol consolidated sales for Mar 2026 are ₹1,070 crore, above ₹1,000 crore, so the band scores 0. The Mar 2025 column on the same table is ₹782 crore. The rule uses the latest year only.",
+          "Moneycontrol profit and loss, Sanghvi Movers",
+          `${MC}/sanghvimovers-SM10/`,
+        ],
+        [
+          "Sector is not scored. The sales table does not describe the product, and the account is already outside the band.",
+          "Moneycontrol profit and loss, Sanghvi Movers",
+          `${MC}/sanghvimovers-SM10/`,
+        ],
+        [
+          "Pune is not scored. This file does not include a page that states the registered office.",
+          "Moneycontrol profit and loss, Sanghvi Movers",
+          `${MC}/sanghvimovers-SM10/`,
+        ],
+        [
+          "Persona is not built for an account outside the revenue band.",
+          "Moneycontrol profit and loss, Sanghvi Movers",
+          `${MC}/sanghvimovers-SM10/`,
+        ],
+        [
+          "LinkedIn is not required once the sales line fails the band.",
+          "Moneycontrol profit and loss, Sanghvi Movers",
+          `${MC}/sanghvimovers-SM10/`,
+        ],
+      ],
+    ),
+    people: [],
+    checklist: [
+      "Open Moneycontrol. If Mar 2026 consolidated sales are still above ₹1,000 crore, leave the account cut off.",
+      "Do not switch the test back to the ₹782 crore year.",
+    ],
+    cutoffReason:
+      "Latest Moneycontrol consolidated sales are ₹1,070 crore, above the ₹1,000 crore ceiling. Mar 2025 on the same page was ₹782 crore, inside the band. The desk uses the latest year.",
+  },
+  {
+    slug: "tega-industries",
+    name: "Tega Industries",
+    legalName: "Tega Industries Limited",
+    website: "https://www.tegaindustries.com/",
+    location: "Group revenue is the test. A city is not needed to cut this account off.",
+    whatTheyMake:
+      "Mining wear parts and related equipment. The company filing, not the standalone sales line, decides the band.",
+    revenueCrore: 1774,
+    revenueLabel:
+      "₹1,774 crore group total income for FY26 in the company filing. Moneycontrol’s default sales line is standalone ₹789 crore.",
+    period: "FY26",
+    moneycontrolUrl: `${MC}/tegaindustries-TI26/`,
+    inBand: false,
+    sectorFit: "industrial",
+    ibxFit: "Do not build a persona on the standalone sales line.",
+    factors: buildFactors(
+      [0, 0, 0, 0, 0],
+      [
+        [
+          "Moneycontrol’s profit-and-loss view is standalone and shows Mar 2026 sales of ₹789 crore. The company’s own FY26 filing reports group total income of ₹1,773.6 crore. The group figure is outside the band, so a standalone reading would qualify the wrong number. Revenue scores 0.",
+          "Tega Industries FY26 earnings call transcript",
+          "https://www.tegaindustries.com/assets/pdfs/int/2026/Q1/20260608_232901.pdf",
+        ],
+        [
+          "Sector is not scored. The account fails the revenue band on the group figure.",
+          "Tega Industries FY26 earnings call transcript",
+          "https://www.tegaindustries.com/assets/pdfs/int/2026/Q1/20260608_232901.pdf",
+        ],
+        [
+          "Pune is not scored.",
+          "Moneycontrol profit and loss, Tega Industries",
+          `${MC}/tegaindustries-TI26/`,
+        ],
+        [
+          "Persona is not built.",
+          "Moneycontrol profit and loss, Tega Industries",
+          `${MC}/tegaindustries-TI26/`,
+        ],
+        [
+          "LinkedIn is not required.",
+          "Moneycontrol profit and loss, Tega Industries",
+          `${MC}/tegaindustries-TI26/`,
+        ],
+      ],
+    ),
+    people: [],
+    checklist: [
+      "Open Moneycontrol and note that the view is standalone ₹789 crore.",
+      "Open the company FY26 transcript and use ₹1,773.6 crore group income. That figure is above the band.",
+    ],
+    cutoffReason:
+      "Moneycontrol shows standalone sales of ₹789 crore. The company’s FY26 group total income is ₹1,773.6 crore, above ₹1,000 crore. Do not qualify Tega on the standalone line.",
+  },
+  {
+    slug: "foseco-india",
+    name: "Foseco India",
+    legalName: "Foseco India Limited",
+    website: "https://www.foseco.com/",
+    location: "A foundry-consumables company. This file does not assign it a Pune plant.",
+    whatTheyMake: "Foundry consumables, not machines.",
+    revenueCrore: 604,
+    revenueLabel: "₹604 crore standalone sales, Moneycontrol, year ended Dec 2025",
+    period: "Dec 2025",
+    moneycontrolUrl: `${MC}/fosecoindia-FI12/`,
+    inBand: true,
+    sectorFit: "other",
+    ibxFit:
+      "The revenue band passes. The product does not. This is the slow-conversion pattern: a ₹500–1,000 crore Indian manufacturer that is not equipment.",
+    factors: buildFactors(
+      [20, 0, 0, 0, 0],
+      [
+        [
+          "Moneycontrol standalone sales for Dec 2025 are ₹604 crore, inside the band, so revenue would score 0.20. The sector gate still cuts the account off.",
+          "Moneycontrol profit and loss, Foseco India",
+          `${MC}/fosecoindia-FI12/`,
+        ],
+        [
+          "Foundry consumables are not heavy equipment or industrial machinery. Sector scores 0, and the account is cut off.",
+          "Moneycontrol profit and loss, Foseco India",
+          `${MC}/fosecoindia-FI12/`,
+        ],
+        [
+          "Pune is not scored. No plant address is in this file.",
+          "Moneycontrol profit and loss, Foseco India",
+          `${MC}/fosecoindia-FI12/`,
+        ],
+        [
+          "Persona is not built for a cut-off sector.",
+          "Moneycontrol profit and loss, Foseco India",
+          `${MC}/fosecoindia-FI12/`,
+        ],
+        [
+          "LinkedIn is not required once the sector gate fails.",
+          "Moneycontrol profit and loss, Foseco India",
+          `${MC}/fosecoindia-FI12/`,
+        ],
+      ],
+    ),
+    people: [],
+    checklist: [
+      "If the inbound lead is Foseco India, stop after the Moneycontrol sales check and the product check.",
+      "Do not spend a persona cycle on it.",
+    ],
+    cutoffReason:
+      "Moneycontrol sales of ₹604 crore are inside the band. The company sells foundry consumables, not equipment. In-band revenue alone is the slow-conversion list.",
+  },
+  {
+    slug: "precision-camshafts",
+    name: "Precision Camshafts",
+    legalName: "Precision Camshafts Limited",
+    website: "https://www.pclindia.in/",
+    location: "Solapur, Maharashtra. Not a Pune heavy-equipment plant.",
+    whatTheyMake: "Camshafts and related auto components.",
+    revenueCrore: 772,
+    revenueLabel: "₹772 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/precisioncamshafts-PC16/`,
+    inBand: true,
+    sectorFit: "other",
+    ibxFit: "In-band auto components. Cut off on sector so persona time is not spent here.",
+    factors: buildFactors(
+      [20, 0, 0, 0, 0],
+      [
+        [
+          "Moneycontrol consolidated sales for Mar 2026 are ₹772 crore, inside the band, so revenue would score 0.20. Sector still cuts the account off.",
+          "Moneycontrol profit and loss, Precision Camshafts",
+          `${MC}/precisioncamshafts-PC16/`,
+        ],
+        [
+          "Camshafts are auto components, not heavy or process equipment. Sector scores 0.",
+          "Moneycontrol profit and loss, Precision Camshafts",
+          `${MC}/precisioncamshafts-PC16/`,
+        ],
+        [
+          "Solapur is not scored as Pune.",
+          "Moneycontrol profit and loss, Precision Camshafts",
+          `${MC}/precisioncamshafts-PC16/`,
+        ],
+        [
+          "Persona is not built.",
+          "Moneycontrol profit and loss, Precision Camshafts",
+          `${MC}/precisioncamshafts-PC16/`,
+        ],
+        [
+          "LinkedIn is not required.",
+          "Moneycontrol profit and loss, Precision Camshafts",
+          `${MC}/precisioncamshafts-PC16/`,
+        ],
+      ],
+    ),
+    people: [],
+    checklist: [
+      "Treat a Solapur auto-component lead in this revenue band as cut off unless the product really is equipment.",
+    ],
+    cutoffReason:
+      "Moneycontrol consolidated sales are ₹772 crore, inside the band. The product is camshafts. Maharashtra manufacturing is not enough.",
+  },
+  {
+    slug: "til",
+    name: "TIL",
+    legalName: "TIL Limited",
+    website: "https://www.tilindia.in/",
+    location: "Not scored.",
+    whatTheyMake: "Cranes and material handling. Confirm on the company site. Sales decide the cut-off.",
+    revenueCrore: 323,
+    revenueLabel: "₹323 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/til-TIL/`,
+    inBand: false,
+    sectorFit: "equipment",
+    ibxFit: "Below the revenue floor. Do not build a persona.",
+    factors: buildFactors(
+      [0, 0, 0, 0, 0],
+      [
+        [
+          "Moneycontrol consolidated sales for Mar 2026 are ₹323 crore, below ₹500 crore, so the band scores 0.",
+          "Moneycontrol profit and loss, TIL",
+          `${MC}/til-TIL/`,
+        ],
+        [
+          "Sector is not scored. Revenue already fails.",
+          "Moneycontrol profit and loss, TIL",
+          `${MC}/til-TIL/`,
+        ],
+        [
+          "Pune is not scored.",
+          "Moneycontrol profit and loss, TIL",
+          `${MC}/til-TIL/`,
+        ],
+        [
+          "Persona is not built.",
+          "Moneycontrol profit and loss, TIL",
+          `${MC}/til-TIL/`,
+        ],
+        [
+          "LinkedIn is not required.",
+          "Moneycontrol profit and loss, TIL",
+          `${MC}/til-TIL/`,
+        ],
+      ],
+    ),
+    people: [],
+    checklist: ["Leave cut off while Moneycontrol sales stay under ₹500 crore."],
+    cutoffReason:
+      "Moneycontrol consolidated sales are ₹323 crore, under the ₹500 crore floor.",
+  },
+  {
+    slug: "indef",
+    name: "Indef",
+    legalName: "Indef Manufacturing Limited",
+    website: "https://www.indef.com/",
+    location: "Not scored.",
+    whatTheyMake: "Hoists and material handling. Confirm on the company site. Sales decide the cut-off.",
+    revenueCrore: 195,
+    revenueLabel: "₹195 crore standalone sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/indefmanufacturing-IM04/`,
+    inBand: false,
+    sectorFit: "equipment",
+    ibxFit: "Below the revenue floor. Do not build a persona.",
+    factors: buildFactors(
+      [0, 0, 0, 0, 0],
+      [
+        [
+          "Moneycontrol standalone sales for Mar 2026 are ₹195 crore, below ₹500 crore, so the band scores 0.",
+          "Moneycontrol profit and loss, Indef Manufacturing",
+          `${MC}/indefmanufacturing-IM04/`,
+        ],
+        [
+          "Sector is not scored. Revenue already fails.",
+          "Moneycontrol profit and loss, Indef Manufacturing",
+          `${MC}/indefmanufacturing-IM04/`,
+        ],
+        [
+          "Pune is not scored.",
+          "Moneycontrol profit and loss, Indef Manufacturing",
+          `${MC}/indefmanufacturing-IM04/`,
+        ],
+        [
+          "Persona is not built.",
+          "Moneycontrol profit and loss, Indef Manufacturing",
+          `${MC}/indefmanufacturing-IM04/`,
+        ],
+        [
+          "LinkedIn is not required.",
+          "Moneycontrol profit and loss, Indef Manufacturing",
+          `${MC}/indefmanufacturing-IM04/`,
+        ],
+      ],
+    ),
+    people: [],
+    checklist: ["Leave cut off while Moneycontrol sales stay under ₹500 crore."],
+    cutoffReason:
+      "Moneycontrol standalone sales are ₹195 crore, under the ₹500 crore floor.",
+  },
   {
     slug: "thermax",
     name: "Thermax",
     legalName: "Thermax Limited",
     website: "https://www.thermaxglobal.com/",
-    location:
-      "Headquarters in Pune. Registered office D-13, MIDC Chinchwad. Corporate office Thermax House, Wakdewadi.",
-    whatTheyMake:
-      "Energy and environment projects: process heat, water, and steam, plus industrial products.",
-    revenueLabel: "₹10,389 crore consolidated revenue, FY2024-25",
-    revenueCrore: 10389,
-    period: "FY2024-25",
-    puneGate: "full",
-    sectorGate: "process",
-    revenueGate: "audited",
-    ibxFit:
-      "Project execution, vendor SLAs, and document-heavy energy jobs are the IB-X surface. Do not name an ERP. No source in this file does.",
+    location: "Pune headquarters, from the FY2024-25 corporate overview.",
+    whatTheyMake: "Process heat, water, and steam equipment. Far above the revenue band.",
+    revenueCrore: 10694,
+    revenueLabel: "₹10,694 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/thermax-T/`,
+    inBand: false,
+    sectorFit: "equipment",
+    ibxFit: "A Pune process-equipment name, and outside this revenue motion.",
     factors: buildFactors(
-      [20, 15, 10, 20, 15, 10, 10],
+      [0, 0, 0, 0, 0],
       [
         [
-          "Consolidated revenue of ₹10,389 crore for FY2024-25 is audited and well above ₹5,000 crore, so revenue scale scores 20.",
-          "Thermax Q4 FY2024-25 press release",
-          "https://www.thermaxglobal.com/sites/default/files/2026-03/Press-Release-Thermax-Limited-Q4-FY-2024-25_0.pdf",
+          "Moneycontrol consolidated sales for Mar 2026 are ₹10,694 crore, far above ₹1,000 crore. Revenue scores 0.",
+          "Moneycontrol profit and loss, Thermax",
+          `${MC}/thermax-T/`,
         ],
         [
-          "Process heat, water, and steam equipment is core process and industrial equipment, so sector fit scores 15.",
+          "Sector is not scored. Revenue already fails this band.",
+          "Moneycontrol profit and loss, Thermax",
+          `${MC}/thermax-T/`,
+        ],
+        [
+          "Pune is real and still not scored, because the band fails first.",
           "Thermax digital annual report 2024-25, corporate overview",
           "https://www.thermaxglobal.com/annual-reports/digital-annual-report-2024-25/corporate-overview.html",
         ],
         [
-          "The registered office and the corporate office are both in Pune, so Pune weight scores 10.",
-          "Thermax digital annual report 2024-25, corporate overview",
-          "https://www.thermaxglobal.com/annual-reports/digital-annual-report-2024-25/corporate-overview.html",
+          "Persona is not rebuilt for this band.",
+          "Moneycontrol profit and loss, Thermax",
+          `${MC}/thermax-T/`,
         ],
         [
-          "The work is project execution with vendor SLAs and heavy documentation, which is a full process surface for workflow and RPA, so this scores 20.",
-          "Thermax digital annual report 2024-25, corporate overview",
-          "https://www.thermaxglobal.com/annual-reports/digital-annual-report-2024-25/corporate-overview.html",
-        ],
-        [
-          "The MD, Group CFO, Chief Digital and Information Officer, and the president of industrial products are all named on the company leadership page, so the committee scores 15.",
-          "Thermax executive council",
-          "https://www.thermaxglobal.com/company-overview/leadership/executive-council",
-        ],
-        [
-          "On the Q4 FY2025 call, Ashish Bhandari said the company is investing heavily on digital execution, so the public trigger scores 10.",
-          "Thermax Q4 FY2025 results conference call",
-          "https://www.thermaxglobal.com/sites/default/files/2025-10/Q4-FY2025-Results-Conference-Call.pdf",
-        ],
-        [
-          "The annual report, the results press release, the leadership page, and the call transcript agree, so evidence quality scores 10.",
-          "Thermax digital annual report 2024-25, corporate overview",
-          "https://www.thermaxglobal.com/annual-reports/digital-annual-report-2024-25/corporate-overview.html",
+          "LinkedIn is not required.",
+          "Moneycontrol profit and loss, Thermax",
+          `${MC}/thermax-T/`,
         ],
       ],
     ),
-    people: [
-      person({
-        name: "Ashish Bhandari",
-        title: "Managing Director and Chief Executive Officer",
-        buyingRole: "Economic buyer",
-        why: "He runs the company and has put digital transformation, AI, and IIoT on the record. Budget for an on-prem workflow stack sits with this seat.",
-        verify: "Confirm he is still MD before a meeting, and do not claim a named ERP.",
-        evidenceGrade: "Company page",
-        asOf: "Executive council page, with the digital-execution remark on the Q4 FY2025 call",
-        sourceLabel: "Thermax executive council",
-        sourceUrl:
-          "https://www.thermaxglobal.com/company-overview/leadership/executive-council",
-      }),
-      person({
-        name: "Rajendran Arunachalam",
-        title: "EVP and Group CFO",
-        buyingRole: "Economic buyer",
-        why: "His brief covers finance, shared services, legal, EXIM, and enterprise risk. Shared services is a direct home for document workflow.",
-        verify: "Re-read the next annual report before treating the title as current.",
-        evidenceGrade: "Company page",
-        asOf: "Executive council page",
-        sourceLabel: "Thermax executive council",
-        sourceUrl:
-          "https://www.thermaxglobal.com/company-overview/leadership/executive-council",
-      }),
-      person({
-        name: "Dr. Amit Sethi",
-        title: "EVP and Chief Digital and Information Officer, since October 2022",
-        buyingRole: "Technical buyer",
-        why: "Industry 4.0, ERP, and SaaS are his published brief. He is the technical buyer for connectors into SAP, Oracle, or Microsoft 365.",
-        verify: "The sources name the themes, not a product. Do not assert which ERP Thermax runs.",
-        evidenceGrade: "Company page",
-        asOf: "Executive council page; in role since October 2022",
-        sourceLabel: "Thermax executive council",
-        sourceUrl:
-          "https://www.thermaxglobal.com/company-overview/leadership/executive-council",
-      }),
-      person({
-        name: "B.C. Mahesh",
-        title: "President, Industrial Products",
-        buyingRole: "Process owner",
-        why: "Process heat, water, and steam are the document-heavy project lines. He is the named operator of that book.",
-        verify: "Confirm the title still reads President, Industrial Products.",
-        evidenceGrade: "Company page",
-        asOf: "Executive council page",
-        sourceLabel: "Thermax executive council",
-        sourceUrl:
-          "https://www.thermaxglobal.com/company-overview/leadership/executive-council",
-      }),
-    ],
+    people: [],
     checklist: [
-      "Open the FY2024-25 corporate overview and the Q4 press release side by side before quoting ₹10,389 crore.",
-      "Do not name an ERP, a plant system, or a personal email. None of those are in the sources.",
-      "Re-check the executive council if the meeting is after October 2026.",
-      "Use the Q4 FY2025 call for the digital-execution quote, not a profile page.",
+      "If a Pune industrial list includes Thermax, cut it from the ₹500–1,000 crore queue.",
     ],
+    cutoffReason:
+      "Moneycontrol consolidated sales are ₹10,694 crore. Pune and process equipment do not bring it into this band.",
   },
   {
     slug: "bharat-forge",
     name: "Bharat Forge",
     legalName: "Bharat Forge Limited",
-    cin: "L25209PN1961PLC012046",
     website: "https://www.bharatforge.com/",
-    location: "Registered office Mundhwa, Pune 411036.",
-    whatTheyMake:
-      "Forgings and heavy engineering for auto, industrial, and defence programmes.",
-    revenueLabel:
-      "₹15,123 crore consolidated revenue, FY2024-25 (standalone ₹8,844 crore)",
-    revenueCrore: 15123,
-    period: "FY2024-25",
-    puneGate: "full",
-    sectorGate: "core",
-    revenueGate: "audited",
-    ibxFit:
-      "Multi-plant forging, defence programmes, and export documentation are the workflow surface. The company bio also describes an AI incubation lab led by the Joint MD.",
+    location: "Pune forging group. Outside this revenue band.",
+    whatTheyMake: "Forgings and industrial components.",
+    revenueCrore: 16811,
+    revenueLabel: "₹16,811 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/bharatforge-BF03/`,
+    inBand: false,
+    sectorFit: "industrial",
+    ibxFit: "A Pune name that swamps a ₹500–1,000 crore queue.",
     factors: buildFactors(
-      [20, 15, 10, 16, 11, 7, 9],
+      [0, 0, 0, 0, 0],
       [
         [
-          "FY2024-25 consolidated revenue of ₹15,123 crore is audited and above ₹5,000 crore, so revenue scale scores 20. Standalone revenue was ₹8,844 crore.",
-          "Bharat Forge annual report 2025",
-          "https://www.bharatforge.com/AR2025/index.html",
+          "Moneycontrol consolidated sales for Mar 2026 are ₹16,811 crore. Revenue scores 0.",
+          "Moneycontrol profit and loss, Bharat Forge",
+          `${MC}/bharatforge-BF03/`,
         ],
         [
-          "Forgings and heavy engineering are core capital goods, so sector fit scores 15.",
-          "Bharat Forge annual report 2025",
-          "https://www.bharatforge.com/AR2025/index.html",
+          "Sector is not scored.",
+          "Moneycontrol profit and loss, Bharat Forge",
+          `${MC}/bharatforge-BF03/`,
         ],
         [
-          "The registered office is at Mundhwa, Pune 411036, so Pune weight scores 10.",
-          "Bharat Forge FY25 corporate information",
-          "https://www.bharatforge.com/AR2025/pdf/corporate-information.pdf",
+          "Pune is not scored.",
+          "Moneycontrol profit and loss, Bharat Forge",
+          `${MC}/bharatforge-BF03/`,
         ],
         [
-          "Forging, defence programmes, and export paperwork are a real process surface, but this file does not show a project-SLA book as explicit as Thermax, so process scores 16.",
-          "Bharat Forge annual report 2025",
-          "https://www.bharatforge.com/AR2025/index.html",
+          "Persona is not built.",
+          "Moneycontrol profit and loss, Bharat Forge",
+          `${MC}/bharatforge-BF03/`,
         ],
         [
-          "The Chairman and MD, the Joint MD, and the CFO are named. The FY25 corporate information does not name a CIO, so the committee scores 11 of 15.",
-          "Bharat Forge FY25 corporate information",
-          "https://www.bharatforge.com/AR2025/pdf/corporate-information.pdf",
-        ],
-        [
-          "The company bio says the Joint MD set up an AI incubation lab and leads finance, M&A, and talent. That is a real trigger, but it is not a dated programme in the FY25 PDF, so the trigger scores 7.",
-          "Amit B. Kalyani company biography",
-          "https://www.bharatforge.com/company/amit-kalyani",
-        ],
-        [
-          "The annual report and the corporate-information PDF are primary filings. A CIO name was left out because outside snippets conflict with a 2018 end date, so evidence scores 9.",
-          "Bharat Forge FY25 corporate information",
-          "https://www.bharatforge.com/AR2025/pdf/corporate-information.pdf",
+          "LinkedIn is not required.",
+          "Moneycontrol profit and loss, Bharat Forge",
+          `${MC}/bharatforge-BF03/`,
         ],
       ],
     ),
-    people: [
-      person({
-        name: "B.N. Kalyani",
-        title: "Chairman and Managing Director",
-        buyingRole: "Economic buyer",
-        why: "He is the chairman and managing director on the FY25 corporate information. Economic approval sits here.",
-        verify: "Confirm the chair is unchanged in the next annual report.",
-        evidenceGrade: "Statutory filing",
-        asOf: "FY2024-25 corporate information",
-        sourceLabel: "Bharat Forge FY25 corporate information",
-        sourceUrl: "https://www.bharatforge.com/AR2025/pdf/corporate-information.pdf",
-      }),
-      person({
-        name: "Amit B. Kalyani",
-        title: "Vice-Chairman and Joint Managing Director",
-        buyingRole: "Economic buyer",
-        why: "The company bio says he leads finance, M&A, and talent, and that he set up an AI incubation lab. He can sponsor a digital pilot.",
-        verify: "Treat the lab as a company-bio claim. Ask what it actually runs before proposing IB-X.",
-        evidenceGrade: "Company page",
-        asOf: "Company biography",
-        sourceLabel: "Amit B. Kalyani company biography",
-        sourceUrl: "https://www.bharatforge.com/company/amit-kalyani",
-      }),
-      person({
-        name: "Kedar Dixit",
-        title: "Chief Financial Officer",
-        buyingRole: "Economic buyer",
-        why: "The FY25 corporate information names him as CFO. Shared-services and finance workflow need this seat.",
-        verify: "Confirm he is still CFO. The company secretary on the same PDF, Tejaswini Chaudhari, is a filing signatory, not a buyer.",
-        evidenceGrade: "Statutory filing",
-        asOf: "FY2024-25 corporate information",
-        sourceLabel: "Bharat Forge FY25 corporate information",
-        sourceUrl: "https://www.bharatforge.com/AR2025/pdf/corporate-information.pdf",
-      }),
-      person({
-        name: "Not named",
-        title: "Chief Information Officer",
-        buyingRole: "Role gap",
-        why: "The FY25 corporate information does not name a CIO. A profile and an undated CMR piece that mention Yogesh Zope conflict with a 2018 end date, so he is not listed.",
-        verify: "Ask the company who holds the CIO or CDIO seat. Do not fill it from a profile.",
-        evidenceGrade: "Statutory filing",
-        asOf: "FY2024-25 corporate information",
-        sourceLabel: "Bharat Forge FY25 corporate information",
-        sourceUrl: "https://www.bharatforge.com/AR2025/pdf/corporate-information.pdf",
-      }),
-    ],
-    checklist: [
-      "Quote consolidated ₹15,123 crore and standalone ₹8,844 crore separately.",
-      "Do not list Yogesh Zope as current CIO.",
-      "Open the Amit Kalyani bio before describing the AI lab.",
-      "CIN on the corporate information is L25209PN1961PLC012046.",
-    ],
+    people: [],
+    checklist: ["Cut from the ₹500–1,000 crore queue."],
+    cutoffReason: "Moneycontrol consolidated sales are ₹16,811 crore, above the ceiling.",
   },
   {
-    slug: "cummins-india",
-    name: "Cummins India",
-    legalName: "Cummins India Limited",
-    website: "https://www.cummins.com/",
-    location: "Headquarters in Pune.",
-    whatTheyMake:
-      "Engines and power systems. FY26 call segments: power generation, distribution, industrial, and exports.",
-    revenueLabel:
-      "₹12,143.19 crore standalone and consolidated revenue from operations, FY2025-26. The results press release also states sales of ₹11,950 crore, up 18%.",
-    revenueCrore: 12143.19,
-    period: "FY2025-26",
-    puneGate: "full",
-    sectorGate: "core",
-    revenueGate: "audited",
-    ibxFit:
-      "Manufacturing plus distribution and export paperwork. The MD chair is empty until 1 November 2026, so the first economic conversation is with the CFO.",
+    slug: "ace",
+    name: "Action Construction Equipment",
+    legalName: "Action Construction Equipment Limited",
+    website: "https://www.ace-cranes.com/",
+    location: "Not a Pune account. Outside the band.",
+    whatTheyMake: "Mobile cranes, tower cranes, and construction equipment.",
+    revenueCrore: 3280,
+    revenueLabel: "₹3,280 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/actionconstructionequipment-ACE3/`,
+    inBand: false,
+    sectorFit: "equipment",
+    ibxFit: "The right kind of equipment, the wrong revenue band for this queue.",
     factors: buildFactors(
-      [20, 15, 10, 16, 9, 9, 10],
+      [0, 0, 0, 0, 0],
       [
         [
-          "The FY2025-26 annual report states standalone and consolidated revenue from operations of ₹12,143.19 crore, above ₹5,000 crore, so revenue scale scores 20. The press release’s sales figure of ₹11,950 crore is the same year and also clears the line.",
-          "Cummins India annual report 2025-26",
-          "https://www.cummins.com/sites/default/files/india/Legal/cummins-india_annual-report_2025_26.pdf",
+          "Moneycontrol consolidated sales for Mar 2026 are ₹3,280 crore. Revenue scores 0.",
+          "Moneycontrol profit and loss, Action Construction Equipment",
+          `${MC}/actionconstructionequipment-ACE3/`,
         ],
         [
-          "Engines, power generation, and industrial equipment are core heavy equipment, so sector fit scores 15.",
-          "Cummins India results press release",
-          "https://www.cummins.com/sites/default/files/india/Legal/seintimationpressrelease.pdf",
+          "Sector is not scored. Revenue already fails.",
+          "Moneycontrol profit and loss, Action Construction Equipment",
+          `${MC}/actionconstructionequipment-ACE3/`,
         ],
         [
-          "The company headquarters is in Pune, so Pune weight scores 10.",
-          "Cummins India annual report 2025-26",
-          "https://www.cummins.com/sites/default/files/india/Legal/cummins-india_annual-report_2025_26.pdf",
+          "Pune is not scored.",
+          "Moneycontrol profit and loss, Action Construction Equipment",
+          `${MC}/actionconstructionequipment-ACE3/`,
         ],
         [
-          "Power generation, distribution, industrial, and exports are a manufacturing and paperwork surface, short of a named project-SLA book, so process scores 16.",
-          "Cummins India results press release",
-          "https://www.cummins.com/sites/default/files/india/Legal/seintimationpressrelease.pdf",
+          "Persona is not built.",
+          "Moneycontrol profit and loss, Action Construction Equipment",
+          `${MC}/actionconstructionequipment-ACE3/`,
         ],
         [
-          "The CFO is in seat and was confirmed at the 6 August 2026 AGM. The MD seat is vacant until 1 November 2026, and no CIO is corroborated in the annual report, so the committee scores 9.",
-          "Cummins India 65th AGM transcript",
-          "https://www.cummins.com/sites/default/files/india/Legal/cil-65th-agm-transcript.pdf",
-        ],
-        [
-          "Shveta Arya resigned as MD effective 31 August 2026, and Gbile Adewunmi is appointed MD from 1 November 2026. That leadership change is a current trigger, so this scores 9.",
-          "Cummins India board outcome, 5 August 2026",
-          "https://www.cummins.com/sites/default/files/india/Legal/seintimationoutcome05082026final_0.pdf",
-        ],
-        [
-          "Revenue, the CFO appointment, the AGM, the resignation, and the incoming MD are all exchange filings, so evidence quality scores 10.",
-          "Cummins India annual report 2025-26",
-          "https://www.cummins.com/sites/default/files/india/Legal/cummins-india_annual-report_2025_26.pdf",
+          "LinkedIn is not required.",
+          "Moneycontrol profit and loss, Action Construction Equipment",
+          `${MC}/actionconstructionequipment-ACE3/`,
         ],
       ],
     ),
-    people: [
-      person({
-        name: "Soma Dilip Ghosh",
-        title: "Chief Financial Officer, from 21 July 2025",
-        buyingRole: "Economic buyer",
-        why: "He is the sitting finance head while the MD chair is empty. A workflow proposal has to be intelligible to him first.",
-        verify: "He was still CFO at the 6 August 2026 AGM. Re-check if the meeting is much later.",
-        evidenceGrade: "Statutory filing",
-        asOf: "Appointment 21 July 2025; AGM 6 August 2026",
-        sourceLabel: "CFO appointment intimation, 21 July 2025",
-        sourceUrl:
-          "https://www.cummins.com/sites/default/files/india/Legal/signedseintimationcfo21072025final.pdf",
-      }),
-      person({
-        name: "Shveta Arya",
-        title: "Managing Director, resigned effective 31 August 2026",
-        buyingRole: "Resigned",
-        why: "She is not the current economic buyer. The resignation is why the MD seat is empty on 9 October 2026.",
-        verify: "Do not book a meeting in her name.",
-        evidenceGrade: "Statutory filing",
-        asOf: "Board outcome 5 August 2026",
-        sourceLabel: "Cummins India board outcome, 5 August 2026",
-        sourceUrl:
-          "https://www.cummins.com/sites/default/files/india/Legal/seintimationoutcome05082026final_0.pdf",
-      }),
-      person({
-        name: "Adegbile Adedapo Adewunmi (Gbile Adewunmi)",
-        title: "Additional Director and Managing Director from 1 November 2026, for three years",
-        buyingRole: "Incoming economic buyer",
-        why: "He becomes MD on 1 November 2026. On 9 October 2026 he is not yet in the seat, so he does not fill the committee score.",
-        verify: "After 1 November 2026, confirm the appointment took effect before calling him MD.",
-        evidenceGrade: "Statutory filing",
-        asOf: "Board intimation 8 October 2026",
-        sourceLabel: "Cummins India board intimation, 8 October 2026",
-        sourceUrl:
-          "https://www.cummins.com/sites/default/files/india/Legal/seintimationbm08102026.pdf",
-      }),
-      person({
-        name: "Not named",
-        title: "Chief Information Officer",
-        buyingRole: "Role gap",
-        why: "A profile snippet for Ashish Thakur was not corroborated in the annual report. He is omitted and scores nothing.",
-        verify: "Do not add a CIO from a profile. Ask the company.",
-        evidenceGrade: "Statutory filing",
-        asOf: "FY2025-26 annual report",
-        sourceLabel: "Cummins India annual report 2025-26",
-        sourceUrl:
-          "https://www.cummins.com/sites/default/files/india/Legal/cummins-india_annual-report_2025_26.pdf",
-      }),
-    ],
-    checklist: [
-      "Score revenue from operations of ₹12,143.19 crore. Mention sales of ₹11,950 crore only as the press line.",
-      "On 9 October 2026 the MD seat is vacant. Gbile Adewunmi starts 1 November 2026.",
-      "Do not name Ashish Thakur.",
-      "Segments to use in a first call: power generation, distribution, industrial, exports.",
-    ],
+    people: [],
+    checklist: ["Keep cranes, and still cut this name while sales stay above ₹1,000 crore."],
+    cutoffReason:
+      "Moneycontrol consolidated sales are ₹3,280 crore. A crane OEM above the ceiling stays out of this queue.",
   },
   {
-    slug: "kirloskar-oil-engines",
-    name: "Kirloskar Oil Engines",
-    legalName: "Kirloskar Oil Engines Limited",
-    website: "https://www.kirloskaroilengines.com/",
-    location:
-      "Registered office Laxmanrao Kirloskar Road, Khadki, Pune 411003. Factories include Pune.",
-    whatTheyMake: "Engines, agri equipment, and gensets.",
-    revenueLabel: "₹5,604 crore standalone net sales, FY2025-26",
-    revenueCrore: 5604,
-    period: "FY2025-26",
-    puneGate: "full",
-    sectorGate: "core",
-    revenueGate: "audited",
-    ibxFit:
-      "Engine and genset manufacturing, with an agri-equipment line. No public CDIO was found, so the technical seat is a question, not a name.",
+    slug: "kirloskar-pneumatic",
+    name: "Kirloskar Pneumatic",
+    legalName: "Kirloskar Pneumatic Company Limited",
+    website: "https://www.kirloskarpneumatic.com/",
+    location: "Pune group company. Outside this revenue band.",
+    whatTheyMake: "Compressors and transmission equipment.",
+    revenueCrore: 1786,
+    revenueLabel: "₹1,786 crore consolidated sales, Moneycontrol, year ended Mar 2026",
+    period: "Mar 2026",
+    moneycontrolUrl: `${MC}/kirloskarpneumaticcompany-KGK/`,
+    inBand: false,
+    sectorFit: "equipment",
+    ibxFit: "Close to the ceiling, and still over it.",
     factors: buildFactors(
-      [20, 15, 10, 15, 11, 8, 9],
+      [0, 0, 0, 0, 0],
       [
         [
-          "FY2025-26 standalone net sales of ₹5,604 crore are audited and above ₹5,000 crore, so revenue scale scores 20. FY2024-25 standalone net sales were ₹5,073 crore.",
-          "KOEL annual report FY2025-26",
-          "https://www.kirloskaroilengines.com/documents/d/oil-engines-ltd/annual-report_koel_fy-25-26",
+          "Moneycontrol consolidated sales for Mar 2026 are ₹1,786 crore, above ₹1,000 crore. Revenue scores 0.",
+          "Moneycontrol profit and loss, Kirloskar Pneumatic",
+          `${MC}/kirloskarpneumaticcompany-KGK/`,
         ],
         [
-          "Engines, agri equipment, and gensets are core heavy equipment, so sector fit scores 15.",
-          "KOEL press release, 14 May 2025",
-          "https://www.kirloskaroilengines.com/documents/541738/o/SE_PressRelease_14May2025.pdf/1a7a72c6-2db9-6859-64c2-0ed35587f6b0",
+          "Sector is not scored.",
+          "Moneycontrol profit and loss, Kirloskar Pneumatic",
+          `${MC}/kirloskarpneumaticcompany-KGK/`,
         ],
         [
-          "The registered office is in Khadki, Pune, and factories include Pune, so Pune weight scores 10.",
-          "KOEL annual report FY2025-26",
-          "https://www.kirloskaroilengines.com/documents/d/oil-engines-ltd/annual-report_koel_fy-25-26",
+          "Pune is not scored.",
+          "Moneycontrol profit and loss, Kirloskar Pneumatic",
+          `${MC}/kirloskarpneumaticcompany-KGK/`,
         ],
         [
-          "Manufacturing of engines, agri equipment, and gensets is a solid plant surface, without a published project-SLA book in this file, so process scores 15.",
-          "KOEL annual report FY2025-26",
-          "https://www.kirloskaroilengines.com/documents/d/oil-engines-ltd/annual-report_koel_fy-25-26",
+          "Persona is not built.",
+          "Moneycontrol profit and loss, Kirloskar Pneumatic",
+          `${MC}/kirloskarpneumaticcompany-KGK/`,
         ],
         [
-          "The FY26 report names the Managing Director, the Chairman, and the CFO. No public CDIO was found, so the committee scores 11.",
-          "KOEL annual report FY2025-26",
-          "https://www.kirloskaroilengines.com/documents/d/oil-engines-ltd/annual-report_koel_fy-25-26",
-        ],
-        [
-          "Gauri Kirloskar became Vice Chairperson and Rahul C. Kirloskar became Chairman with effect from 1 April 2026, so the leadership change scores 8.",
-          "KOEL annual report FY2025-26",
-          "https://www.kirloskaroilengines.com/documents/d/oil-engines-ltd/annual-report_koel_fy-25-26",
-        ],
-        [
-          "The FY26 annual report and the 14 May 2025 press release are primary. The missing CDIO is stated as a gap rather than filled, so evidence scores 9.",
-          "KOEL annual report FY2025-26",
-          "https://www.kirloskaroilengines.com/documents/d/oil-engines-ltd/annual-report_koel_fy-25-26",
+          "LinkedIn is not required.",
+          "Moneycontrol profit and loss, Kirloskar Pneumatic",
+          `${MC}/kirloskarpneumaticcompany-KGK/`,
         ],
       ],
     ),
-    people: [
-      person({
-        name: "Gauri Kirloskar",
-        title: "Vice Chairperson with effect from 1 April 2026, and Managing Director",
-        buyingRole: "Economic buyer",
-        why: "She is Managing Director and, from 1 April 2026, Vice Chairperson. She was already MD when FY25 sales were announced.",
-        verify: "Use the FY26 report for the vice-chair title. The May 2025 release is the earlier MD reference.",
-        evidenceGrade: "Statutory filing",
-        asOf: "FY2025-26 annual report; MD also on the 14 May 2025 release",
-        sourceLabel: "KOEL annual report FY2025-26",
-        sourceUrl:
-          "https://www.kirloskaroilengines.com/documents/d/oil-engines-ltd/annual-report_koel_fy-25-26",
-      }),
-      person({
-        name: "Rahul C. Kirloskar",
-        title: "Chairman with effect from 1 April 2026",
-        buyingRole: "Economic buyer",
-        why: "He took the chair on 1 April 2026. Board sponsorship of a multi-year workflow programme runs through this seat.",
-        verify: "Confirm the chair date against any filing after the FY26 report.",
-        evidenceGrade: "Statutory filing",
-        asOf: "FY2025-26 annual report",
-        sourceLabel: "KOEL annual report FY2025-26",
-        sourceUrl:
-          "https://www.kirloskaroilengines.com/documents/d/oil-engines-ltd/annual-report_koel_fy-25-26",
-      }),
-      person({
-        name: "Sachin Kejriwal",
-        title: "Chief Financial Officer",
-        buyingRole: "Economic buyer",
-        why: "The FY26 report names him CFO. Finance has to live with any shared-services automation.",
-        verify: "Confirm he is still CFO before a proposal.",
-        evidenceGrade: "Statutory filing",
-        asOf: "FY2025-26 annual report",
-        sourceLabel: "KOEL annual report FY2025-26",
-        sourceUrl:
-          "https://www.kirloskaroilengines.com/documents/d/oil-engines-ltd/annual-report_koel_fy-25-26",
-      }),
-      person({
-        name: "Not named",
-        title: "Chief Digital and Information Officer",
-        buyingRole: "Role gap",
-        why: "No public CDIO was found in the FY26 report or the May 2025 release.",
-        verify: "Ask who owns ERP and plant systems. Do not invent the name.",
-        evidenceGrade: "Statutory filing",
-        asOf: "FY2025-26 annual report",
-        sourceLabel: "KOEL annual report FY2025-26",
-        sourceUrl:
-          "https://www.kirloskaroilengines.com/documents/d/oil-engines-ltd/annual-report_koel_fy-25-26",
-      }),
-    ],
-    checklist: [
-      "Quote FY26 standalone net sales of ₹5,604 crore. FY25 standalone net sales were ₹5,073 crore.",
-      "Say plainly that no public CDIO was found.",
-      "Registered office is Khadki, Pune 411003, and factories include Pune.",
-    ],
-  },
-  {
-    slug: "suzlon",
-    name: "Suzlon",
-    legalName: "Suzlon Energy Limited",
-    website: "https://www.suzlon.com/",
-    location:
-      "Corporate and global headquarters: One Earth, Hadapsar, Pune 411028. Registered office: Ahmedabad.",
-    whatTheyMake:
-      "Wind turbine generators, a foundry and forging line, and a large operations-and-maintenance book.",
-    revenueLabel:
-      "₹16,679 crore audited consolidated revenue from operations, FY2025-26 (FY2024-25 ₹10,851 crore)",
-    revenueCrore: 16679,
-    period: "FY2025-26",
-    puneGate: "full",
-    sectorGate: "core",
-    revenueGate: "audited",
-    ibxFit:
-      "Turbine manufacturing plus operations and maintenance of ₹2,483.85 crore in FY26: work orders, vendor follow-up, and SLAs. The registered office is in Ahmedabad, so say Pune corporate HQ, not Pune registered office.",
-    factors: buildFactors(
-      [20, 15, 8, 20, 12, 8, 10],
-      [
-        [
-          "FY26 audited consolidated revenue from operations is ₹16,679 crore, above ₹5,000 crore, so revenue scale scores 20. FY25 was ₹10,851 crore.",
-          "Suzlon Q4 FY26 results release",
-          "https://www.suzlon.com/pdf/investor/financial-reports-presentations/2025-26/fourth-quarter/Q4FY26_Results_Release_FINAL.pdf",
-        ],
-        [
-          "Wind turbine generators, foundry and forging, and operations and maintenance are core heavy equipment, so sector fit scores 15.",
-          "Suzlon results for 31 March 2026",
-          "https://www.suzlon.com/pdf/green-business/Results31march26.pdf",
-        ],
-        [
-          "The corporate and global headquarters is One Earth, Hadapsar, Pune. The registered office is Ahmedabad, so Pune weight scores 8 rather than 10.",
-          "Suzlon contact page",
-          "https://www.suzlon.com/in-en/contact-us",
-        ],
-        [
-          "FY26 segment revenue includes wind turbine generators of ₹14,040.19 crore and operations and maintenance of ₹2,483.85 crore. That service book is work orders and SLAs, so process scores 20.",
-          "Suzlon results for 31 March 2026",
-          "https://www.suzlon.com/pdf/green-business/Results31march26.pdf",
-        ],
-        [
-          "The factsheet and the investor helpdesk name the Chairman and MD, the Executive Vice Chairman, the Group CEO, and the Group CFO. No CIO is named in the factsheet, so the committee scores 12.",
-          "Suzlon factsheet, June 2026",
-          "https://www.suzlon.com/uploads/Suzlon_Factsheet_June_2026_68389bc38e.pdf",
-        ],
-        [
-          "Rahul Jain was appointed Group CFO with effect from 15 December 2025, so the leadership trigger scores 8.",
-          "Suzlon investor helpdesk",
-          "https://www.suzlon.com/investors/helpdesk/",
-        ],
-        [
-          "The results release, the results PDF, the June 2026 factsheet, and the Pune helpdesk agree on the officers, so evidence quality scores 10.",
-          "Suzlon Q4 FY26 results release",
-          "https://www.suzlon.com/pdf/investor/financial-reports-presentations/2025-26/fourth-quarter/Q4FY26_Results_Release_FINAL.pdf",
-        ],
-      ],
-    ),
-    people: [
-      person({
-        name: "Vinod R. Tanti",
-        title: "Chairman and Managing Director",
-        buyingRole: "Economic buyer",
-        why: "He is Chairman and MD, named at the Pune corporate office on the investor helpdesk.",
-        verify: "Confirm the chair against the next results filing.",
-        evidenceGrade: "Company page",
-        asOf: "Investor helpdesk and June 2026 factsheet",
-        sourceLabel: "Suzlon investor helpdesk",
-        sourceUrl: "https://www.suzlon.com/investors/helpdesk/",
-      }),
-      person({
-        name: "Girish R. Tanti",
-        title: "Executive Vice Chairman",
-        buyingRole: "Economic buyer",
-        why: "He is the executive vice chairman on the same helpdesk and factsheet.",
-        verify: "Confirm the title if the meeting is after the June 2026 factsheet.",
-        evidenceGrade: "Company page",
-        asOf: "June 2026 factsheet",
-        sourceLabel: "Suzlon factsheet, June 2026",
-        sourceUrl:
-          "https://www.suzlon.com/uploads/Suzlon_Factsheet_June_2026_68389bc38e.pdf",
-      }),
-      person({
-        name: "Ajay Kapur",
-        title: "Group Chief Executive Officer",
-        buyingRole: "Economic buyer",
-        why: "Group CEO is the operating sponsor for a service-book workflow across manufacturing and maintenance.",
-        verify: "Confirm he is still Group CEO.",
-        evidenceGrade: "Company page",
-        asOf: "June 2026 factsheet",
-        sourceLabel: "Suzlon factsheet, June 2026",
-        sourceUrl:
-          "https://www.suzlon.com/uploads/Suzlon_Factsheet_June_2026_68389bc38e.pdf",
-      }),
-      person({
-        name: "Rahul Jain",
-        title: "Group Chief Financial Officer, appointed with effect from 15 December 2025",
-        buyingRole: "Economic buyer",
-        why: "A new Group CFO owns the case for service-margin and vendor-cost workflow.",
-        verify: "The appointment date is 15 December 2025. Confirm he is still in seat.",
-        evidenceGrade: "Company page",
-        asOf: "Investor helpdesk",
-        sourceLabel: "Suzlon investor helpdesk",
-        sourceUrl: "https://www.suzlon.com/investors/helpdesk/",
-      }),
-      person({
-        name: "Not named",
-        title: "Chief Information Officer",
-        buyingRole: "Role gap",
-        why: "The June 2026 factsheet does not name a CIO.",
-        verify: "Ask who owns turbine and service systems. Do not fill the gap from a profile.",
-        evidenceGrade: "Company page",
-        asOf: "June 2026 factsheet",
-        sourceLabel: "Suzlon factsheet, June 2026",
-        sourceUrl:
-          "https://www.suzlon.com/uploads/Suzlon_Factsheet_June_2026_68389bc38e.pdf",
-      }),
-    ],
-    checklist: [
-      "Say corporate HQ Pune and registered office Ahmedabad in the same breath.",
-      "FY26 segments: wind turbine generators ₹14,040.19 crore, foundry and forging ₹596.49 crore, operations and maintenance ₹2,483.85 crore.",
-      "No CIO is named in the factsheet.",
-      "Foundry and forging is part of Suzlon. Do not merge this file with Bharat Forge.",
-    ],
-  },
-  {
-    slug: "kirloskar-brothers",
-    name: "Kirloskar Brothers",
-    legalName: "Kirloskar Brothers Limited",
-    website: "https://www.kirloskarpumps.com/",
-    location:
-      "The FY25 investor release is datelined Pune, 14 May 2025. This file does not invent a street address.",
-    whatTheyMake: "Pumps and fluid-management projects.",
-    revenueLabel:
-      "₹4,492 crore consolidated revenue from operations, FY2024-25. FY2025-26 was not verified.",
-    revenueCrore: 4492,
-    period: "FY2024-25",
-    puneGate: "full",
-    sectorGate: "process",
-    revenueGate: "audited",
-    ibxFit:
-      "Pump and fluid-management projects produce vendor files, site reports, and handover packs. The Pune gate rests on a Pune dateline, not a street address copied from the release.",
-    factors: buildFactors(
-      [16, 15, 7, 17, 11, 7, 8],
-      [
-        [
-          "FY25 consolidated revenue from operations is ₹4,492 crore, audited and between ₹1,000 crore and ₹5,000 crore, so revenue scale scores 16. FY26 is not in this file.",
-          "Kirloskar Brothers investor release, 14 May 2025",
-          "https://www.kirloskarpumps.com/wp-content/uploads/2025/05/IntimationInvestorRelease.pdf",
-        ],
-        [
-          "Pumps and fluid-management projects are process and industrial equipment, so sector fit scores 15.",
-          "Kirloskar Brothers Q4 FY25 call transcript",
-          "https://www.kirloskarpumps.com/wp-content/uploads/2025/05/Kirloskar-Brothers-Limited-Q4FY25-Transcript.pdf",
-        ],
-        [
-          "The release is datelined Pune and no street address was taken from it, so Pune weight scores 7. Presence is not none.",
-          "Kirloskar Brothers investor release, 14 May 2025",
-          "https://www.kirloskarpumps.com/wp-content/uploads/2025/05/IntimationInvestorRelease.pdf",
-        ],
-        [
-          "Fluid-management projects are a document and vendor surface close to a full project book, so process scores 17.",
-          "Kirloskar Brothers Q4 FY25 call transcript",
-          "https://www.kirloskarpumps.com/wp-content/uploads/2025/05/Kirloskar-Brothers-Limited-Q4FY25-Transcript.pdf",
-        ],
-        [
-          "The Chairman and MD, the Joint MD, and the CFO are named. No CDIO is named, so the committee scores 11.",
-          "Kirloskar Brothers board report 2025",
-          "https://www.kirloskarpumps.com/virtual-annual-report-2025/pdf/Board's%20Report.pdf",
-        ],
-        [
-          "Sanjay C. Kirloskar was reappointed Chairman and MD with effect from 19 November 2025, so the trigger scores 7.",
-          "Kirloskar Brothers board report 2025",
-          "https://www.kirloskarpumps.com/virtual-annual-report-2025/pdf/Board's%20Report.pdf",
-        ],
-        [
-          "The investor release, the call, and the board report are primary, but FY26 revenue is unverified, so evidence scores 8.",
-          "Kirloskar Brothers investor release, 14 May 2025",
-          "https://www.kirloskarpumps.com/wp-content/uploads/2025/05/IntimationInvestorRelease.pdf",
-        ],
-      ],
-    ),
-    people: [
-      person({
-        name: "Sanjay C. Kirloskar",
-        title: "Chairman and Managing Director, reappointed with effect from 19 November 2025",
-        buyingRole: "Economic buyer",
-        why: "He is Chairman and MD. Project-business investment needs this seat.",
-        verify: "The reappointment date is 19 November 2025, from the board report. Confirm it is still current.",
-        evidenceGrade: "Statutory filing",
-        asOf: "Board report 2025",
-        sourceLabel: "Kirloskar Brothers board report 2025",
-        sourceUrl:
-          "https://www.kirloskarpumps.com/virtual-annual-report-2025/pdf/Board's%20Report.pdf",
-      }),
-      person({
-        name: "Rama Kirloskar",
-        title: "Joint Managing Director",
-        buyingRole: "Economic buyer",
-        why: "Joint MD is the second economic seat on the India business.",
-        verify: "Confirm the title in a filing later than the FY25 board report.",
-        evidenceGrade: "Statutory filing",
-        asOf: "Board report 2025",
-        sourceLabel: "Kirloskar Brothers board report 2025",
-        sourceUrl:
-          "https://www.kirloskarpumps.com/virtual-annual-report-2025/pdf/Board's%20Report.pdf",
-      }),
-      person({
-        name: "Bhavesh Chheda",
-        title: "Chief Financial Officer",
-        buyingRole: "Economic buyer",
-        why: "He is named as CFO on the Q4 FY25 call. Project cash and vendor terms sit with finance.",
-        verify: "The name is from the call, not a separate appointment intimation in this file. Re-check.",
-        evidenceGrade: "Statutory filing",
-        asOf: "Q4 FY25 call, May 2025",
-        sourceLabel: "Kirloskar Brothers Q4 FY25 call transcript",
-        sourceUrl:
-          "https://www.kirloskarpumps.com/wp-content/uploads/2025/05/Kirloskar-Brothers-Limited-Q4FY25-Transcript.pdf",
-      }),
-      person({
-        name: "Alok Kirloskar",
-        title: "Managing Director, Kirloskar Brothers International BV",
-        buyingRole: "Process owner",
-        why: "He runs the international subsidiary, which matters for export projects. He is not a substitute for an India plant or IT owner.",
-        verify: "Do not describe him as MD of the Indian listed company.",
-        evidenceGrade: "Statutory filing",
-        asOf: "Q4 FY25 call",
-        sourceLabel: "Kirloskar Brothers Q4 FY25 call transcript",
-        sourceUrl:
-          "https://www.kirloskarpumps.com/wp-content/uploads/2025/05/Kirloskar-Brothers-Limited-Q4FY25-Transcript.pdf",
-      }),
-    ],
-    checklist: [
-      "Label the revenue FY2024-25. FY2025-26 was not verified.",
-      "Do not invent a street address. The release is datelined Pune.",
-      "Keep Kirloskar Brothers distinct from Kirloskar Oil Engines.",
-      "No CDIO is named.",
-    ],
-  },
-  {
-    slug: "praj",
-    name: "Praj",
-    legalName: "Praj Industries Limited",
-    website: "https://www.praj.net/",
-    location:
-      "The FY25 results release is datelined Pune, 29 April 2025. This file does not invent a street address.",
-    whatTheyMake:
-      "Process plants and critical equipment for bioenergy, breweries, and zero-liquid-discharge.",
-    revenueLabel:
-      "₹3,228.04 crore consolidated income from operations, FY2024-25 (₹32,280.422 million)",
-    revenueCrore: 3228.04,
-    period: "FY2024-25",
-    puneGate: "full",
-    sectorGate: "process",
-    revenueGate: "audited",
-    ibxFit:
-      "Process-plant projects are document-heavy: design packs, vendor follow-up, and commissioning files. Leadership below is as of the 11 August 2025 AGM and must be re-checked.",
-    factors: buildFactors(
-      [16, 15, 7, 18, 11, 8, 8],
-      [
-        [
-          "FY25 consolidated income from operations is ₹32,280.422 million, which is ₹3,228.04 crore, between ₹1,000 crore and ₹5,000 crore, so revenue scale scores 16.",
-          "Praj Q4 FY25 results release",
-          "https://www.praj.net/wp-content/uploads/2025/04/Praj-Q4-FY25-Results-Release.pdf",
-        ],
-        [
-          "Bioenergy, brewery, and zero-liquid-discharge plants are process equipment, so sector fit scores 15.",
-          "Praj Q4 FY25 results release",
-          "https://www.praj.net/wp-content/uploads/2025/04/Praj-Q4-FY25-Results-Release.pdf",
-        ],
-        [
-          "The results release is datelined Pune and no street address was taken from it, so Pune weight scores 7. Presence is not none.",
-          "Praj Q4 FY25 results release",
-          "https://www.praj.net/wp-content/uploads/2025/04/Praj-Q4-FY25-Results-Release.pdf",
-        ],
-        [
-          "Turnkey process plants and critical equipment create a project-file surface close to the top of the scale, so process scores 18.",
-          "Praj 39th AGM transcript, 11 August 2025",
-          "https://www.praj.net/wp-content/uploads/2025/09/Transcript-of-39th-AGM-11.08.2025.pdf",
-        ],
-        [
-          "As of the August 2025 AGM the Chairman, Managing Director, and CFO are named. No CDIO is named, and a later filing was not opened, so the committee scores 11.",
-          "Praj 39th AGM transcript, 11 August 2025",
-          "https://www.praj.net/wp-content/uploads/2025/09/Transcript-of-39th-AGM-11.08.2025.pdf",
-        ],
-        [
-          "Shishir Joshipura was CEO and MD on the 29 April 2025 release, and Ashish Gaikwad is Managing Director on the 11 August 2025 AGM transcript, so the change scores 8.",
-          "Praj 39th AGM transcript, 11 August 2025",
-          "https://www.praj.net/wp-content/uploads/2025/09/Transcript-of-39th-AGM-11.08.2025.pdf",
-        ],
-        [
-          "The results release and the AGM transcript are primary, but leadership is only as of August 2025, so evidence scores 8.",
-          "Praj 39th AGM transcript, 11 August 2025",
-          "https://www.praj.net/wp-content/uploads/2025/09/Transcript-of-39th-AGM-11.08.2025.pdf",
-        ],
-      ],
-    ),
-    people: [
-      person({
-        name: "Dr. Pramod Chaudhari",
-        title: "Chairman",
-        buyingRole: "Economic buyer",
-        why: "He is Chairman on the 11 August 2025 AGM transcript.",
-        verify: "Re-check a filing after August 2025 before using this as current.",
-        evidenceGrade: "Statutory filing",
-        asOf: "AGM 11 August 2025",
-        sourceLabel: "Praj 39th AGM transcript",
-        sourceUrl:
-          "https://www.praj.net/wp-content/uploads/2025/09/Transcript-of-39th-AGM-11.08.2025.pdf",
-      }),
-      person({
-        name: "Ashish Gaikwad",
-        title: "Managing Director",
-        buyingRole: "Economic buyer",
-        why: "The August 2025 AGM transcript lists him as Managing Director. He is the operating economic buyer as of that date.",
-        verify: "This replaced Shishir Joshipura, who was CEO and MD on 29 April 2025. Open a later filing.",
-        evidenceGrade: "Statutory filing",
-        asOf: "AGM 11 August 2025",
-        sourceLabel: "Praj 39th AGM transcript",
-        sourceUrl:
-          "https://www.praj.net/wp-content/uploads/2025/09/Transcript-of-39th-AGM-11.08.2025.pdf",
-      }),
-      person({
-        name: "Sachin Raole",
-        title: "CFO and Director-Resources",
-        buyingRole: "Economic buyer",
-        why: "Finance and resources are named together on the AGM transcript. That is the shared-services seat.",
-        verify: "Re-check the title against a post-August 2025 filing.",
-        evidenceGrade: "Statutory filing",
-        asOf: "AGM 11 August 2025",
-        sourceLabel: "Praj 39th AGM transcript",
-        sourceUrl:
-          "https://www.praj.net/wp-content/uploads/2025/09/Transcript-of-39th-AGM-11.08.2025.pdf",
-      }),
-      person({
-        name: "Shishir Joshipura",
-        title: "Chief Executive Officer and Managing Director as of 29 April 2025",
-        buyingRole: "Resigned",
-        why: "He was CEO and MD on the FY25 results date. The August 2025 AGM names a different Managing Director. Do not use him as the current buyer.",
-        verify: "Treat this as prior. Confirm the transition in a later filing if a precise end date is needed.",
-        evidenceGrade: "Statutory filing",
-        asOf: "Results release 29 April 2025",
-        sourceLabel: "Praj Q4 FY25 results release",
-        sourceUrl:
-          "https://www.praj.net/wp-content/uploads/2025/04/Praj-Q4-FY25-Results-Release.pdf",
-      }),
-    ],
-    checklist: [
-      "State leadership as of the 11 August 2025 AGM, and tell the reader to open a later filing.",
-      "Keep the unit straight: ₹32,280.422 million is ₹3,228.04 crore.",
-      "Do not invent a street address.",
-      "No CDIO is named.",
-    ],
-  },
-  {
-    slug: "alfa-laval-india",
-    name: "Alfa Laval India",
-    legalName: "Alfa Laval India Private Limited",
-    cin: "U29299PN1937PTC002732",
-    website: "https://www.alfalaval.com/",
-    location:
-      "Aggregators give the registered office as Mumbai-Pune Road, Dapodi, Pune 411012. Confirm that on MCA. CRISIL was used for revenue, not for the address.",
-    whatTheyMake:
-      "Process technology (turnkey plants) and equipment such as separators and heat exchangers.",
-    revenueLabel:
-      "₹2,212 crore in fiscal 2025, cited by CRISIL on 20 March 2026. Nine-month FY26 revenue ₹1,960 crore. This file did not open the company’s own annual report.",
-    revenueCrore: 2212,
-    period: "Fiscal 2025, rating rationale 20 March 2026",
-    puneGate: "full",
-    sectorGate: "process",
-    revenueGate: "rating",
-    ibxFit:
-      "Turnkey plants and an unexecuted order book of about ₹1,800 crore as of December 2025 are a project surface. The MD is medium-grade only, so this stays on Verify.",
-    factors: buildFactors(
-      [14, 15, 8, 17, 6, 7, 6],
-      [
-        [
-          "CRISIL cites revenue of ₹2,212 crore in fiscal 2025. That would score 16 if it were the company’s own annual report. It is a rating rationale, so the factor scores 14 and the audited-revenue gate stays shut.",
-          "CRISIL rating rationale, 20 March 2026",
-          "https://www.crisilratings.com/mnt/winshare/Ratings/RatingList/RatingDocs/AlfaLavalIndiaPrivateLimited_March%2020_%202026_RR_389596.html",
-        ],
-        [
-          "Turnkey process plants, separators, and heat exchangers are process equipment, so sector fit scores 15.",
-          "CRISIL rating rationale, 20 March 2026",
-          "https://www.crisilratings.com/mnt/winshare/Ratings/RatingList/RatingDocs/AlfaLavalIndiaPrivateLimited_March%2020_%202026_RR_389596.html",
-        ],
-        [
-          "The CIN is a Pune registration and aggregators state a Dapodi registered office. That is not the CRISIL document, so Pune weight scores 8.",
-          "The Company Check, Alfa Laval India",
-          "https://www.thecompanycheck.com/company/alfa-laval-india-private-limited/U29299PN1937PTC002732",
-        ],
-        [
-          "CRISIL describes turnkey plants and an unexecuted order book of about ₹1,800 crore as of December 2025, so process scores 17.",
-          "CRISIL rating rationale, 20 March 2026",
-          "https://www.crisilratings.com/mnt/winshare/Ratings/RatingList/RatingDocs/AlfaLavalIndiaPrivateLimited_March%2020_%202026_RR_389596.html",
-        ],
-        [
-          "Subhasis Das is named Managing Director on aggregators and The Org. CRISIL does not name him. That is not a full committee, so this scores 6.",
-          "The Org profile of Subhasis Das",
-          "https://theorg.com/org/alfa-laval/org-chart/subhasis-das",
-        ],
-        [
-          "CRISIL also cites nine-month FY26 revenue of ₹1,960 crore and the December 2025 order book, so the public trigger scores 7.",
-          "CRISIL rating rationale, 20 March 2026",
-          "https://www.crisilratings.com/mnt/winshare/Ratings/RatingList/RatingDocs/AlfaLavalIndiaPrivateLimited_March%2020_%202026_RR_389596.html",
-        ],
-        [
-          "A rating rationale plus aggregators is medium evidence. The company’s annual report was not opened, so evidence quality scores 6.",
-          "CRISIL rating rationale, 20 March 2026",
-          "https://www.crisilratings.com/mnt/winshare/Ratings/RatingList/RatingDocs/AlfaLavalIndiaPrivateLimited_March%2020_%202026_RR_389596.html",
-        ],
-      ],
-    ),
-    people: [
-      person({
-        name: "Subhasis Das",
-        title: "Managing Director, as stated by aggregators and The Org",
-        buyingRole: "Economic buyer",
-        why: "The Org calls him Cluster President and Managing Director, India. A 2020 press release announced the MD appointment from 1 December 2020. CRISIL’s 2026 rationale does not name him, so he does not receive full committee points.",
-        verify: "Open an MCA director list or a company filing before using the title in a letter.",
-        evidenceGrade: "Aggregator",
-        asOf: "The Org profile; appointment press release 10 December 2020; CRISIL 20 March 2026 is silent on the name",
-        sourceLabel: "The Org profile of Subhasis Das",
-        sourceUrl: "https://theorg.com/org/alfa-laval/org-chart/subhasis-das",
-      }),
-    ],
-    checklist: [
-      "Do not treat ₹2,212 crore as qualified audited revenue until the company’s own financial statements are opened.",
-      "CIN U29299PN1937PTC002732. Confirm the Dapodi address on MCA.",
-      "CRISIL: nine-month FY26 revenue ₹1,960 crore; unexecuted order book about ₹1,800 crore as of December 2025.",
-      "Do not give the MD full committee points.",
-    ],
-  },
-  {
-    slug: "sany-india",
-    name: "SANY India",
-    legalName: "SANY Heavy Industry India Pvt Ltd",
-    cin: "U45201PN2002PTC181239",
-    website: "https://www.sany.in/",
-    location:
-      "Plot E-4, Chakan Industrial Area Phase III, Taluka Khed, Pune 410501.",
-    whatTheyMake:
-      "Construction and mining equipment, built at the Chakan plant.",
-    revenueLabel:
-      "Not scored. A CEO Magazine interview claims revenue of almost US$1 billion and does not state a fiscal year. This file does not convert that into crore.",
-    revenueCrore: null,
-    period: "Not established",
-    puneGate: "full",
-    sectorGate: "core",
-    revenueGate: "unverified",
-    holdReason:
-      "Revenue is not audited in this file. Open MCA Form AOC-4 before treating the account as qualified.",
-    ibxFit:
-      "The Chakan plant is a real heavy-equipment site. The account still waits, because the revenue gate fails.",
-    factors: buildFactors(
-      [0, 15, 10, 12, 6, 3, 3],
-      [
-        [
-          "The only revenue sentence in this file is an undated ‘almost US$1 billion’ claim. It is not converted and it scores 0.",
-          "CEO Magazine interview with Deepak Garg",
-          "https://www.theceomagazine.com/executive-interviews/manufacturing/deepak-garg-2/",
-        ],
-        [
-          "Excavators, cranes, concrete equipment, and related construction machinery are core heavy equipment, so sector fit scores 15.",
-          "SANY India",
-          "https://www.sany.in/",
-        ],
-        [
-          "The company contact page states the Chakan plant address and the CIN, so Pune weight scores 10.",
-          "SANY India contact page",
-          "https://www.sany.in/contact-us/",
-        ],
-        [
-          "The plant and the product lines are described. A workflow or SLA map is not, so process scores 12.",
-          "SANY India",
-          "https://www.sany.in/",
-        ],
-        [
-          "Deepak Garg is Vice Chairman and Managing Director on the company leadership page. No CFO or CIO is named in this file, so the committee scores 6.",
-          "SANY India leadership",
-          "https://www.sany.in/leadership/",
-        ],
-        [
-          "The interview is not a dated investment or leadership filing, so the public trigger scores 3.",
-          "CEO Magazine interview with Deepak Garg",
-          "https://www.theceomagazine.com/executive-interviews/manufacturing/deepak-garg-2/",
-        ],
-        [
-          "The plant page is a company source. The revenue claim is not a filing, so evidence quality scores 3.",
-          "SANY India contact page",
-          "https://www.sany.in/contact-us/",
-        ],
-      ],
-    ),
-    people: [
-      person({
-        name: "Deepak Garg",
-        title: "Vice Chairman and Managing Director",
-        buyingRole: "Economic buyer",
-        why: "The company leadership page names him Vice Chairman and MD. He is the only buyer in this file, and the revenue gap blocks qualification.",
-        verify: "Open AOC-4 before a pursuit. Do not quote the US-dollar claim as Indian revenue.",
-        evidenceGrade: "Company page",
-        asOf: "SANY India leadership page",
-        sourceLabel: "SANY India leadership",
-        sourceUrl: "https://www.sany.in/leadership/",
-      }),
-    ],
-    checklist: [
-      "Open MCA AOC-4 for CIN U45201PN2002PTC181239 before any revenue is treated as qualified.",
-      "Do not convert ‘almost US$1 billion’ into crore.",
-      "The Chakan address is on the company contact page. Do not add a phone number or a mailbox from that page to this desk.",
-    ],
-  },
-  {
-    slug: "jcb-india",
-    name: "JCB India",
-    legalName: "JCB India Limited",
-    cin: "U74899DL1979PLC009431",
-    website: "https://www.jcb.com/",
-    location:
-      "Registered office New Delhi. Pune, in this file, is a global engineering centre only. Do not claim a Pune factory.",
-    whatTheyMake: "Construction equipment.",
-    revenueLabel:
-      "Not an exact figure. Tofler shows an operating-revenue range of ‘Over INR 500 cr’ for the year ended 31 March 2025.",
-    revenueCrore: null,
-    period: "Year ended 31 March 2025, band only",
-    puneGate: "partial",
-    sectorGate: "core",
-    revenueGate: "band",
-    ibxFit:
-      "ET Realty reports ₹200–250 crore earmarked for tooling, R&D, and digital innovation, and a plan to grow the Pune engineering centre from 700 to 1,000 people. That is a partial Pune gate and a band-only revenue gate.",
-    factors: buildFactors(
-      [6, 15, 4, 12, 7, 9, 5],
-      [
-        [
-          "The only revenue statement is a band, ‘Over INR 500 cr’, so the factor scores 6 and the account is not qualified on revenue.",
-          "Tofler, JCB India Limited",
-          "https://www.tofler.in/jcb-india-limited/company/U74899DL1979PLC009431",
-        ],
-        [
-          "Construction equipment is core heavy equipment, so sector fit scores 15.",
-          "ET Realty, 2025 interview with Deepak Shetty",
-          "https://realty.economictimes.indiatimes.com/news/allied-industries/jcb-india-forecasts-strong-growth-amid-infrastructure-demand-in-fy26/121494710",
-        ],
-        [
-          "Pune is an engineering centre in the ET report, not a factory, and the registered office is New Delhi, so Pune weight scores 4.",
-          "ET Realty, 2025 interview with Deepak Shetty",
-          "https://realty.economictimes.indiatimes.com/news/allied-industries/jcb-india-forecasts-strong-growth-amid-infrastructure-demand-in-fy26/121494710",
-        ],
-        [
-          "The same interview describes tooling, R&D, and digital innovation spend, not a plant workflow map, so process scores 12.",
-          "ET Realty, 2025 interview with Deepak Shetty",
-          "https://realty.economictimes.indiatimes.com/news/allied-industries/jcb-india-forecasts-strong-growth-amid-infrastructure-demand-in-fy26/121494710",
-        ],
-        [
-          "Tofler names Deepak Jagannath Shetty as MD and Sunil Khurana as whole-time director. No CFO or CIO is in this file, so the committee scores 7.",
-          "Tofler, JCB India Limited",
-          "https://www.tofler.in/jcb-india-limited/company/U74899DL1979PLC009431",
-        ],
-        [
-          "The interview says FY25 growth was 11 percent, ₹500 crore was invested in FY25, and ₹200–250 crore is earmarked for tooling, R&D, and digital innovation, so the trigger scores 9.",
-          "ET Realty, 2025 interview with Deepak Shetty",
-          "https://realty.economictimes.indiatimes.com/news/allied-industries/jcb-india-forecasts-strong-growth-amid-infrastructure-demand-in-fy26/121494710",
-        ],
-        [
-          "A registrar band plus one press interview is not an annual report, so evidence quality scores 5.",
-          "Tofler, JCB India Limited",
-          "https://www.tofler.in/jcb-india-limited/company/U74899DL1979PLC009431",
-        ],
-      ],
-    ),
-    people: [
-      person({
-        name: "Deepak Jagannath Shetty",
-        title: "Managing Director on Tofler; CEO and MD in the ET Realty interview",
-        buyingRole: "Economic buyer",
-        why: "He is the named MD, and he is the person quoted on the engineering-centre and digital-innovation plan.",
-        verify: "DIN on Tofler is 08857174. Confirm the title against a filing, and do not treat the revenue band as an exact number.",
-        evidenceGrade: "Press",
-        asOf: "Tofler for the year ended 31 March 2025; ET Realty interview",
-        sourceLabel: "Tofler, JCB India Limited",
-        sourceUrl:
-          "https://www.tofler.in/jcb-india-limited/company/U74899DL1979PLC009431",
-      }),
-      person({
-        name: "Sunil Khurana",
-        title: "Whole-time director",
-        buyingRole: "Economic buyer",
-        why: "Tofler lists him as whole-time director. The file does not give him an operating brief.",
-        verify: "Ask what he runs before assigning a process role.",
-        evidenceGrade: "Aggregator",
-        asOf: "Tofler",
-        sourceLabel: "Tofler, JCB India Limited",
-        sourceUrl:
-          "https://www.tofler.in/jcb-india-limited/company/U74899DL1979PLC009431",
-      }),
-    ],
-    checklist: [
-      "Do not claim an exact revenue. The Tofler range is ‘Over INR 500 cr’.",
-      "Do not claim a Pune factory. The Pune fact is an engineering centre, with headcount planned from 700 to 1,000.",
-      "Registered office is New Delhi. CIN U74899DL1979PLC009431.",
-      "₹500 crore invested in FY25, and ₹200–250 crore earmarked for tooling, R&D, and digital innovation, are interview figures. Open a filing before quoting them in a proposal.",
-    ],
-  },
-  {
-    slug: "john-deere-india",
-    name: "John Deere India",
-    legalName: "John Deere India Private Limited",
-    cin: "U74220PN1997PTC112441",
-    website: "https://www.deere.co.in/",
-    location:
-      "Aggregators give the registered office as Tower XIV, Cybercity, Magarpatta City, Hadapsar, Pune 411013. Confirm on MCA.",
-    whatTheyMake:
-      "John Deere’s Indian equipment company. This file does not describe a factory workflow, and it does not mix in the NBFC.",
-    revenueLabel:
-      "Not scored. Secondary summaries conflict, and no annual report or AOC-4 was read.",
-    revenueCrore: null,
-    period: "Not established",
-    puneGate: "full",
-    sectorGate: "core",
-    revenueGate: "conflict",
-    holdReason:
-      "Rupee revenue was not scored. Read AOC-4. Keep John Deere Financial India, a different NBFC, out of this account.",
-    ibxFit:
-      "Sector and a Pune registered office are not enough. The revenue gate fails, so the account is Hold.",
-    factors: buildFactors(
-      [0, 15, 8, 8, 5, 4, 3],
-      [
-        [
-          "Revenue summaries disagree and none of them is an annual report opened for this file, so revenue scale scores 0.",
-          "The Company Check, John Deere India Private Limited",
-          "https://www.thecompanycheck.com/company/john-deere-india-private-limited/U74220PN1997PTC112441",
-        ],
-        [
-          "John Deere’s equipment business is core agri and construction machinery, so sector fit scores 15. The group’s Indian NBFC is a different company and is not this score.",
-          "John Deere India financing page, for the entity split",
-          "https://www.deere.co.in/en/finance/financing/",
-        ],
-        [
-          "Aggregators place the registered office in Magarpatta, Pune. That is not a filing opened here, so Pune weight scores 8.",
-          "The Company Check, John Deere India Private Limited",
-          "https://www.thecompanycheck.com/company/john-deere-india-private-limited/U74220PN1997PTC112441",
-        ],
-        [
-          "This file has a registered office and an MD appointment. It does not have a plant or service workflow, so process scores 8.",
-          "The Company Check, John Deere India Private Limited",
-          "https://www.thecompanycheck.com/company/john-deere-india-private-limited/U74220PN1997PTC112441",
-        ],
-        [
-          "The Company Check lists Rajesh Kumar Sinha as MD, appointed 15 October 2024. That is one aggregator name, so the committee scores 5.",
-          "The Company Check, John Deere India Private Limited",
-          "https://www.thecompanycheck.com/company/john-deere-india-private-limited/U74220PN1997PTC112441",
-        ],
-        [
-          "The MD appointment of 15 October 2024 is more than a year before this file date, and it is not a fresh operating trigger, so the trigger scores 4.",
-          "The Company Check, John Deere India Private Limited",
-          "https://www.thecompanycheck.com/company/john-deere-india-private-limited/U74220PN1997PTC112441",
-        ],
-        [
-          "Identity comes from an aggregator, and revenue tables elsewhere conflict, so evidence quality scores 3.",
-          "The Company Check, John Deere India Private Limited",
-          "https://www.thecompanycheck.com/company/john-deere-india-private-limited/U74220PN1997PTC112441",
-        ],
-      ],
-    ),
-    people: [
-      person({
-        name: "Rajesh Kumar Sinha",
-        title: "Managing Director, appointed 15 October 2024",
-        buyingRole: "Economic buyer",
-        why: "The Company Check lists him as MD of John Deere India Private Limited. The revenue gate still fails, so the name does not qualify the account.",
-        verify: "Confirm the appointment on MCA. Do not build a committee from this one aggregator row.",
-        evidenceGrade: "Aggregator",
-        asOf: "The Company Check, appointment 15 October 2024",
-        sourceLabel: "The Company Check, John Deere India Private Limited",
-        sourceUrl:
-          "https://www.thecompanycheck.com/company/john-deere-india-private-limited/U74220PN1997PTC112441",
-      }),
-      person({
-        name: "Abhay Dhokte",
-        title: "Managing Director, John Deere Financial India Private Limited",
-        buyingRole: "Different legal entity",
-        why: "John Deere’s own financing page describes John Deere Financial India as an NBFC. He is that company’s MD on the investor page. He is not the MD of the equipment company in this dossier.",
-        verify: "Do not mix CIN U65923PN2011PTC141149 with CIN U74220PN1997PTC112441.",
-        evidenceGrade: "Company page",
-        asOf: "John Deere India investor-information page",
-        sourceLabel: "John Deere India investor information",
-        sourceUrl: "https://www.deere.co.in/en/investor-information/",
-      }),
-    ],
-    checklist: [
-      "Do not score a rupee revenue until AOC-4 is read.",
-      "CIN of this account is U74220PN1997PTC112441.",
-      "John Deere Financial India is a different NBFC. Abhay Dhokte belongs to that entity.",
-      "The Magarpatta address is from aggregators. Confirm it on MCA.",
-    ],
-  },
-  {
-    slug: "honeywell-automation-india",
-    name: "Honeywell Automation India",
-    legalName: "Honeywell Automation India Limited",
-    website: "https://www.honeywell.com/",
-    location: "Registered office Hadapsar Industrial Estate, Pune 411013.",
-    whatTheyMake:
-      "Industrial and building automation. This is a competitor-adjacent file, not a customer pursuit.",
-    revenueLabel: "₹4,189.6 crore revenue from operations, FY2024-25 (₹41,896 million)",
-    revenueCrore: 4189.6,
-    period: "FY2024-25",
-    puneGate: "full",
-    sectorGate: "competitor",
-    revenueGate: "audited",
-    holdReason:
-      "They sell industrial and building automation. Hold as a competitor. A partner conversation is the only use of this file, and titles should be re-checked against a post-FY25 filing.",
-    ibxFit:
-      "IB-X would sit in the same plants Honeywell Automation already sells into. Do not pursue them as a customer.",
-    factors: buildFactors(
-      [16, 4, 10, 4, 11, 5, 9],
-      [
-        [
-          "FY2024-25 revenue from operations is ₹4,189.6 crore, between ₹1,000 crore and ₹5,000 crore, so revenue scale scores 16. The competitor penalty is applied after the factor sum.",
-          "Honeywell Automation India annual report 2024-25",
-          "https://www.honeywell.com/content/dam/honeywellbt/en/documents/downloads/india-hail/financials/annual-reports/hon-corp-hail-annual-report-2024-25.pdf",
-        ],
-        [
-          "They sell industrial and building automation rather than heavy equipment, so sector fit scores 4.",
-          "Honeywell Automation India annual report 2024-25",
-          "https://www.honeywell.com/content/dam/honeywellbt/en/documents/downloads/india-hail/financials/annual-reports/hon-corp-hail-annual-report-2024-25.pdf",
-        ],
-        [
-          "The registered office is Hadapsar Industrial Estate, Pune 411013, so Pune weight scores 10.",
-          "Honeywell Automation India annual report 2024-25",
-          "https://www.honeywell.com/content/dam/honeywellbt/en/documents/downloads/india-hail/financials/annual-reports/hon-corp-hail-annual-report-2024-25.pdf",
-        ],
-        [
-          "The process surface for buying IB-X is low because they are the automation vendor, so process scores 4.",
-          "Honeywell Automation India annual report 2024-25",
-          "https://www.honeywell.com/content/dam/honeywellbt/en/documents/downloads/india-hail/financials/annual-reports/hon-corp-hail-annual-report-2024-25.pdf",
-        ],
-        [
-          "The 27 June 2025 AGM proceedings name the MD and the CFO. That would be a strong committee at a customer. Here it scores 11, and then the competitor penalty applies.",
-          "Honeywell Automation India 41st AGM proceedings, 27 June 2025",
-          "https://www.honeywell.com/content/dam/honeywellbt/en/documents/downloads/india-hail/agm-egm-postal-ballot/hon-corp-stock-exchange-intimation-proceedings-of-41st-agm-27062025.pdf",
-        ],
-        [
-          "The latest governance event in this file is the 27 June 2025 AGM, with no customer-side digital trigger, so the trigger scores 5.",
-          "Honeywell Automation India 41st AGM proceedings, 27 June 2025",
-          "https://www.honeywell.com/content/dam/honeywellbt/en/documents/downloads/india-hail/agm-egm-postal-ballot/hon-corp-stock-exchange-intimation-proceedings-of-41st-agm-27062025.pdf",
-        ],
-        [
-          "The annual report and the AGM proceedings are primary filings, so evidence quality scores 9. Titles should still be re-checked after FY25.",
-          "Honeywell Automation India annual report 2024-25",
-          "https://www.honeywell.com/content/dam/honeywellbt/en/documents/downloads/india-hail/financials/annual-reports/hon-corp-hail-annual-report-2024-25.pdf",
-        ],
-      ],
-    ),
-    people: [
-      person({
-        name: "Atul Vinayak Pai",
-        title: "Managing Director",
-        buyingRole: "Economic buyer",
-        why: "He is MD in the FY2024-25 annual report and at the 27 June 2025 AGM. The use of the name is a partner map, not a pursuit.",
-        verify: "Re-check the title against a filing after FY2024-25.",
-        evidenceGrade: "Statutory filing",
-        asOf: "AGM 27 June 2025",
-        sourceLabel: "Honeywell Automation India 41st AGM proceedings",
-        sourceUrl:
-          "https://www.honeywell.com/content/dam/honeywellbt/en/documents/downloads/india-hail/agm-egm-postal-ballot/hon-corp-stock-exchange-intimation-proceedings-of-41st-agm-27062025.pdf",
-      }),
-      person({
-        name: "Pulkit Goyal",
-        title: "Chief Financial Officer",
-        buyingRole: "Economic buyer",
-        why: "He is CFO at the 27 June 2025 AGM. Same limit: partner context only.",
-        verify: "Re-check the title against a post-FY25 filing.",
-        evidenceGrade: "Statutory filing",
-        asOf: "AGM 27 June 2025",
-        sourceLabel: "Honeywell Automation India 41st AGM proceedings",
-        sourceUrl:
-          "https://www.honeywell.com/content/dam/honeywellbt/en/documents/downloads/india-hail/agm-egm-postal-ballot/hon-corp-stock-exchange-intimation-proceedings-of-41st-agm-27062025.pdf",
-      }),
-    ],
-    checklist: [
-      "Do not open a customer pursuit. Competitive overlap is the point of the penalty.",
-      "Revenue from operations ₹4,189.6 crore is ₹41,896 million, FY2024-25.",
-      "Re-check MD and CFO titles against a filing after 27 June 2025.",
-      "Registered office Hadapsar Industrial Estate, Pune 411013.",
-    ],
-  },
-  {
-    slug: "forbes-marshall",
-    name: "Forbes Marshall",
-    legalName: "Forbes Marshall",
-    website: "https://www.forbesmarshall.com/",
-    location:
-      "Steam-engineering manufacturer with a campus at MIDC Chakan Phase II, near Savardari, Pune. The 2015 company note describes a 50-acre site.",
-    whatTheyMake: "Steam systems and control instrumentation for process industry.",
-    revenueLabel:
-      "Not scored. BusinessLine in 2017 reported about ₹800 crore. A LinkedIn company-page estimate near ₹1,800 crore is also in circulation. Those conflict, and LinkedIn was not opened.",
-    revenueCrore: null,
-    period: "Conflict — 2017 press versus an unopened profile estimate",
-    puneGate: "full",
-    sectorGate: "process",
-    revenueGate: "conflict",
-    holdReason:
-      "Evidence gap. The revenue sources conflict, neither is a current statutory filing, and the account is not qualified.",
-    ibxFit:
-      "Steam engineering for process plants would otherwise be a fit. The file is here so the rubric’s refusal is visible.",
-    factors: buildFactors(
-      [0, 15, 10, 12, 4, 2, 2],
-      [
-        [
-          "BusinessLine in 2017 reported about ₹800 crore, and a LinkedIn company-page estimate of about ₹1,800 crore conflicts with it. LinkedIn is not a source on this desk, and no current filing was opened, so revenue scores 0.",
-          "BusinessLine, 2017, Naushad Forbes on exports",
-          "https://www.thehindubusinessline.com/companies/forbes-marshall-plans-to-step-up-export-business/article64240812.ece",
-        ],
-        [
-          "Steam systems and control instrumentation for process industry are process equipment, so sector fit scores 15. Sector fit does not override the revenue block.",
-          "Forbes Marshall, Chakan steam-systems facility",
-          "https://www.forbesmarshall.com/news-media/forbes-marshall-inaugurates-a-new-steam-systems-manufacturing-facility-at-chakan/",
-        ],
-        [
-          "The company describes a manufacturing campus at MIDC Chakan Phase II, so Pune weight scores 10.",
-          "Forbes Marshall, Chakan steam-systems facility",
-          "https://www.forbesmarshall.com/news-media/forbes-marshall-inaugurates-a-new-steam-systems-manufacturing-facility-at-chakan/",
-        ],
-        [
-          "The Chakan note describes steam-product manufacturing. It is not a current map of vendor or service workflow, so process scores 12.",
-          "Forbes Marshall, Chakan steam-systems facility",
-          "https://www.forbesmarshall.com/news-media/forbes-marshall-inaugurates-a-new-steam-systems-manufacturing-facility-at-chakan/",
-        ],
-        [
-          "BusinessLine in 2017 called Naushad Forbes Director. A World Economic Forum bio calls him Co-Chairman. That is not a current statutory filing, so the committee scores 4.",
-          "World Economic Forum biography of Naushad Forbes",
-          "https://www.weforum.org/stories/authors/naushad-forbes/",
-        ],
-        [
-          "The revenue interview is from 2017. There is no current buying trigger in this file, so the trigger scores 2.",
-          "BusinessLine, 2017, Naushad Forbes on exports",
-          "https://www.thehindubusinessline.com/companies/forbes-marshall-plans-to-step-up-export-business/article64240812.ece",
-        ],
-        [
-          "The two revenue clues conflict and the newer one was not opened because it sits on LinkedIn, so evidence quality scores 2.",
-          "BusinessLine, 2017, Naushad Forbes on exports",
-          "https://www.thehindubusinessline.com/companies/forbes-marshall-plans-to-step-up-export-business/article64240812.ece",
-        ],
-      ],
-    ),
-    people: [
-      person({
-        name: "Naushad Forbes",
-        title: "Director in a 2017 interview; Co-Chairman on a World Economic Forum bio",
-        buyingRole: "Economic buyer",
-        why: "He is the public name attached to Forbes Marshall. The title is not stable across these two pages, and neither page is a current filing.",
-        verify: "Do not use either title in a letter until a current company page or filing is opened.",
-        evidenceGrade: "Stale or conflicting",
-        asOf: "BusinessLine, updated 8 December 2017; WEF bio undated in this file",
-        sourceLabel: "BusinessLine, 2017",
-        sourceUrl:
-          "https://www.thehindubusinessline.com/companies/forbes-marshall-plans-to-step-up-export-business/article64240812.ece",
-      }),
-    ],
-    checklist: [
-      "Do not qualify. The 2017 figure of about ₹800 crore and a LinkedIn estimate near ₹1,800 crore conflict.",
-      "Do not open or scrape LinkedIn to resolve the conflict. Ask for audited financials instead.",
-      "Pune manufacturing at Chakan is established by the company’s own 2015 campus note. That does not clear revenue.",
-      "Re-check Naushad Forbes’s current title before using it.",
-    ],
+    people: [],
+    checklist: ["Do not pull this into the band because the Kirloskar name is local."],
+    cutoffReason:
+      "Moneycontrol consolidated sales are ₹1,786 crore, above ₹1,000 crore.",
   },
 ]
 
-export type DeskAccount = Account & {
-  baseScore: number
-  penalty: number
-  score: number
-  tier: Tier
-}
-
-function enrich(account: Account): DeskAccount {
-  const penalty = penaltyOf(account)
-  const baseScore = baseScoreOf(account)
-  return {
-    ...account,
-    baseScore,
-    penalty,
-    score: baseScore - penalty,
-    tier: tierOf(account),
-  }
-}
+const FACTOR_IDS: FactorId[] = [
+  "revenue",
+  "sector",
+  "pune",
+  "persona",
+  "linkedin",
+]
 
 function assertDesk(list: Account[]) {
   const slugs = new Set<string>()
-
   for (const account of list) {
-    if (slugs.has(account.slug)) {
-      throw new Error(`Duplicate slug ${account.slug}`)
-    }
+    if (slugs.has(account.slug)) throw new Error(`duplicate slug ${account.slug}`)
     slugs.add(account.slug)
 
     if (account.factors.length !== FACTOR_GUIDE.length) {
-      throw new Error(`${account.slug} does not have ${FACTOR_GUIDE.length} factors`)
+      throw new Error(`${account.slug} factor count`)
     }
-
     account.factors.forEach((factor, index) => {
       const guide = FACTOR_GUIDE[index]
       if (!guide || factor.id !== guide.id || factor.max !== guide.max) {
-        throw new Error(`${account.slug} factor ${index} does not match the guide`)
+        throw new Error(`${account.slug} factor ${factor.id} drifted`)
       }
       if (factor.points < 0 || factor.points > factor.max) {
-        throw new Error(`${account.slug} ${factor.id} points out of range`)
+        throw new Error(`${account.slug} points out of range for ${factor.id}`)
       }
-      if (!factor.justification.trim() || !factor.sourceLabel.trim()) {
-        throw new Error(`${account.slug} ${factor.id} is missing a justification`)
-      }
-      if (!factor.sourceUrl.startsWith("https://")) {
-        throw new Error(`${account.slug} ${factor.id} needs an https source`)
-      }
-      if (factor.sourceUrl.toLowerCase().includes("linkedin.com")) {
-        throw new Error(`${account.slug} cites LinkedIn`)
+      if (!factor.justification || !factor.sourceUrl.startsWith("https://")) {
+        throw new Error(`${account.slug} missing justification`)
       }
     })
 
-    const expectedRevenue = revenuePoints(account.revenueGate, account.revenueCrore)
-    if (account.factors[0]?.points !== expectedRevenue) {
-      throw new Error(
-        `${account.slug} revenue points ${account.factors[0]?.points} != ${expectedRevenue}`,
-      )
+    const ids = account.factors.map((factor) => factor.id)
+    if (ids.join() !== FACTOR_IDS.join()) {
+      throw new Error(`${account.slug} factor order`)
     }
 
-    const blob = JSON.stringify(account).toLowerCase()
-    if (blob.includes("linkedin.com")) {
-      throw new Error(`${account.slug} contains a LinkedIn URL`)
+    const inNumbers =
+      account.revenueCrore >= 500 && account.revenueCrore <= 1000
+    if (account.inBand !== inNumbers && account.slug !== "tega-industries") {
+      throw new Error(`${account.slug} band flag does not match ${account.revenueCrore}`)
     }
-    if (blob.includes("@")) {
-      throw new Error(`${account.slug} contains an email-like string`)
+    if (account.slug === "tega-industries" && account.inBand) {
+      throw new Error("tega must stay outside the band")
     }
 
     const tier = tierOf(account)
-    const blocked =
-      account.sectorGate === "competitor" ||
-      account.revenueGate === "unverified" ||
-      account.revenueGate === "conflict"
-    if (blocked && tier !== "hold") {
-      throw new Error(`${account.slug} should be Hold`)
+    if ((tier === "high" || tier === "medium") && account.cutoffReason) {
+      throw new Error(`${account.slug} is qualified and also marked cut off`)
     }
-    if (tier === "pursue" && scoreOf(account) < 75) {
-      throw new Error(`${account.slug} pursued below 75`)
+    if (tier === "cutoff" && !account.cutoffReason) {
+      throw new Error(`${account.slug} cutoff without a reason`)
+    }
+    if (tier === "high" && scoreOf(account) <= 0.8) {
+      throw new Error(`${account.slug} high at or under 0.80`)
+    }
+    if (tier === "medium" && (scoreOf(account) < 0.5 || scoreOf(account) > 0.8)) {
+      throw new Error(`${account.slug} medium outside 0.50–0.80`)
+    }
+
+    const blob = JSON.stringify(account)
+    if (blob.includes("@")) throw new Error(`${account.slug} has an email-like string`)
+    for (const personRow of account.people) {
+      if (!personRow.linkedinUrl.includes("linkedin.com")) {
+        throw new Error(`${account.slug} person missing LinkedIn check`)
+      }
+    }
+    if (account.linkedinCompanyUrl && !account.linkedinCompanyUrl.includes("linkedin.com/company")) {
+      throw new Error(`${account.slug} company LinkedIn URL`)
     }
   }
 }
 
 assertDesk(accounts)
+
+export type DeskAccount = Account & {
+  points: number
+  score: number
+  tier: Tier
+}
+
+function enrich(account: Account): DeskAccount {
+  const points = pointsOf(account)
+  return { ...account, points, score: points / 100, tier: tierOf(account) }
+}
 
 export const desk: DeskAccount[] = accounts.map(enrich)
 
@@ -1440,24 +1041,24 @@ export function getAccount(slug: string) {
 
 export function tierCounts() {
   return {
-    pursue: desk.filter((account) => account.tier === "pursue").length,
-    verify: desk.filter((account) => account.tier === "verify").length,
-    hold: desk.filter((account) => account.tier === "hold").length,
+    high: desk.filter((account) => account.tier === "high").length,
+    medium: desk.filter((account) => account.tier === "medium").length,
+    cutoff: desk.filter((account) => account.tier === "cutoff").length,
   }
 }
 
-export function pursueNow() {
+export function qualified() {
   return desk
-    .filter((account) => account.tier === "pursue")
+    .filter((account) => account.tier === "high" || account.tier === "medium")
     .slice()
     .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
 }
 
-export function evidenceGap() {
-  return desk.filter(
-    (account) =>
-      account.revenueGate === "conflict" || account.revenueGate === "unverified",
-  )
+export function byTier(tier: Tier) {
+  return desk
+    .filter((account) => account.tier === tier)
+    .slice()
+    .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
 }
 
 export { desk as accounts }

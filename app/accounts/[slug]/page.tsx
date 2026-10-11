@@ -3,12 +3,10 @@ import { notFound } from "next/navigation"
 
 import { SiteShell } from "@/components/site-shell"
 import { TierBadge } from "@/components/tier-badge"
-import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import { accounts, getAccount } from "@/lib/accounts"
-import { decisionSentence, scoreOf, tierOf } from "@/lib/qualification"
+import { decisionSentence, formatScore, scoreOf, tierOf } from "@/lib/qualification"
 
 export function generateStaticParams() {
   return accounts.map((account) => ({ slug: account.slug }))
@@ -25,6 +23,7 @@ export default async function AccountPage({
 
   const score = scoreOf(account)
   const tier = tierOf(account)
+  const peopleSearch = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(`${account.name} Managing Director`)}`
 
   return (
     <SiteShell current="/accounts">
@@ -34,7 +33,7 @@ export default async function AccountPage({
           <h1 className="font-heading text-4xl">{account.name}</h1>
         </div>
         <div className="flex items-center gap-3">
-          <span className="font-heading text-5xl">{score}</span>
+          <span className="font-heading text-5xl">{formatScore(score)}</span>
           <TierBadge tier={tier} />
         </div>
       </div>
@@ -42,11 +41,18 @@ export default async function AccountPage({
       <div className="grid gap-3 md:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle>Revenue</CardTitle>
+            <CardTitle>Moneycontrol sales</CardTitle>
           </CardHeader>
           <CardContent>
             <p>{account.revenueLabel}</p>
-            <p className="mt-1 text-muted-foreground">{account.period}</p>
+            <a
+              className="mt-2 inline-block text-sm underline underline-offset-4"
+              href={account.moneycontrolUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Open the sales line
+            </a>
           </CardContent>
         </Card>
         <Card>
@@ -63,17 +69,17 @@ export default async function AccountPage({
         </Card>
       </div>
 
-      {account.holdReason ? (
+      {account.cutoffReason ? (
         <Card className="mt-3">
           <CardHeader>
-            <CardTitle>Why this is not a pursuit</CardTitle>
+            <CardTitle>Why this is cut off</CardTitle>
           </CardHeader>
-          <CardContent>{account.holdReason}</CardContent>
+          <CardContent>{account.cutoffReason}</CardContent>
         </Card>
       ) : null}
 
       <section className="mt-8">
-        <h2 className="font-heading text-2xl">Why IB-X fits</h2>
+        <h2 className="font-heading text-2xl">Persona in one pass</h2>
         <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
           {account.ibxFit}
         </p>
@@ -86,137 +92,117 @@ export default async function AccountPage({
           >
             Company site
           </a>
-          {account.cin ? <span className="text-muted-foreground"> · CIN {account.cin}</span> : null}
         </p>
       </section>
 
       <section className="mt-8">
-        <h2 className="font-heading text-2xl">Qualification math</h2>
-        <p className="mt-2 max-w-3xl text-muted-foreground">
-          {decisionSentence(account)} The headline number is the sum of the
-          factor points
-          {account.penalty > 0 ? `, minus ${account.penalty} for competitive overlap` : ""}.
-        </p>
-        <p className="mt-3 font-mono text-sm">
-          {account.factors.map((factor) => factor.points).join(" + ")}
-          {account.penalty > 0 ? ` − ${account.penalty}` : ""} = {score}
-        </p>
-        <div className="mt-4 grid gap-3 md:hidden">
+        <h2 className="font-heading text-2xl">Score</h2>
+        <p className="mt-2 max-w-3xl text-muted-foreground">{decisionSentence(account)}</p>
+        <ul className="mt-4 flex flex-col gap-3">
           {account.factors.map((factor) => (
-            <Card key={factor.id} size="sm">
-              <CardHeader>
-                <CardTitle>
-                  {factor.label} · {factor.points}/{factor.max}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-2">
-                <p>{factor.justification}</p>
-                <a className="underline underline-offset-4" href={factor.sourceUrl} rel="noreferrer" target="_blank">
-                  {factor.sourceLabel}
-                </a>
-              </CardContent>
-            </Card>
+            <li key={factor.id} className="border border-border bg-card p-4">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <p className="font-medium">{factor.label}</p>
+                <p className="font-mono text-sm">
+                  {(factor.points / 100).toFixed(2)} / {(factor.max / 100).toFixed(2)}
+                </p>
+              </div>
+              <p className="mt-2 text-sm leading-relaxed">{factor.justification}</p>
+              <a
+                className="mt-2 inline-block text-sm underline underline-offset-4"
+                href={factor.sourceUrl}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {factor.sourceLabel}
+              </a>
+            </li>
           ))}
-        </div>
-        <div className="mt-4 hidden overflow-x-auto rounded-xl ring-1 ring-foreground/10 md:block">
-          <table className="w-full min-w-[720px] text-left text-sm">
-            <thead className="bg-muted text-muted-foreground">
-              <tr>
-                <th className="px-3 py-2 font-medium">Factor</th>
-                <th className="px-3 py-2 font-medium">Points</th>
-                <th className="px-3 py-2 font-medium">Justification</th>
-                <th className="px-3 py-2 font-medium">Source</th>
-              </tr>
-            </thead>
-            <tbody>
-              {account.factors.map((factor) => (
-                <tr key={factor.id} className="border-t border-border align-top">
-                  <td className="px-3 py-3 font-medium">{factor.label}</td>
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    {factor.points} / {factor.max}
-                  </td>
-                  <td className="px-3 py-3 leading-relaxed">{factor.justification}</td>
-                  <td className="px-3 py-3">
-                    <a
-                      className="underline underline-offset-4"
-                      href={factor.sourceUrl}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      {factor.sourceLabel}
-                    </a>
-                  </td>
-                </tr>
-              ))}
-              {account.penalty > 0 ? (
-                <tr className="border-t border-border align-top">
-                  <td className="px-3 py-3 font-medium">Competitor penalty</td>
-                  <td className="px-3 py-3 whitespace-nowrap">−{account.penalty}</td>
-                  <td className="px-3 py-3 leading-relaxed">
-                    The company sells industrial or building automation, so this line is subtracted and the tier is Hold.
-                  </td>
-                  <td className="px-3 py-3 text-muted-foreground">Applied in the scorer</td>
-                </tr>
-              ) : null}
-              <tr className="border-t border-border bg-muted/60">
-                <td className="px-3 py-3 font-medium">Score</td>
-                <td className="px-3 py-3 font-medium">{score}</td>
-                <td className="px-3 py-3" colSpan={2}>
-                  {tierOf(account) === "pursue" ? "Pursue" : tierOf(account) === "verify" ? "Verify" : "Hold"}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        </ul>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="font-heading text-2xl">LinkedIn check</h2>
+        {account.linkedinCompanyUrl ? (
+          <div className="mt-3 max-w-3xl">
+            <p className="leading-relaxed">{account.linkedinConfirms}</p>
+            <a
+              className="mt-2 inline-block underline underline-offset-4"
+              href={account.linkedinCompanyUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Open the company page
+            </a>
+          </div>
+        ) : (
+          <p className="mt-3 max-w-3xl text-muted-foreground">
+            No company page is stored. The account is already cut off on
+            revenue or sector, so do not start a LinkedIn pass.
+          </p>
+        )}
       </section>
 
       <section className="mt-8">
         <h2 className="font-heading text-2xl">Decision makers</h2>
-        <div className="mt-4 grid gap-3">
-          {account.people.map((person) => (
-            <Card key={person.name}>
-              <CardHeader>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <CardTitle className="text-xl">{person.name}</CardTitle>
-                  <Badge variant="outline">{person.buyingRole}</Badge>
+        {account.people.length === 0 ? (
+          <div className="mt-3 max-w-3xl">
+            <p className="text-muted-foreground">
+              No person is named from a company page or a filing in this file.
+              {tier === "cutoff"
+                ? " Leave it that way."
+                : " Use the search, then keep a profile only when the title matches MD, CEO, or CFO."}
+            </p>
+            {tier !== "cutoff" ? (
+              <a
+                className="mt-2 inline-block underline underline-offset-4"
+                href={peopleSearch}
+                rel="noreferrer"
+                target="_blank"
+              >
+                Search LinkedIn for a managing director
+              </a>
+            ) : null}
+          </div>
+        ) : (
+          <ul className="mt-4 grid gap-3">
+            {account.people.map((person) => (
+              <li key={`${person.name}-${person.title}`} className="border border-border bg-card p-4">
+                <p className="text-xs tracking-[0.14em] text-muted-foreground uppercase">
+                  {person.buyingRole}
+                </p>
+                <p className="mt-1 font-heading text-2xl">{person.name}</p>
+                <p className="text-sm">{person.title}</p>
+                <p className="mt-2 text-sm leading-relaxed">{person.why}</p>
+                <p className="mt-2 text-sm text-muted-foreground">{person.linkedinNote}</p>
+                <div className="mt-3 flex flex-col gap-1 text-sm">
+                  <a className="underline underline-offset-4" href={person.linkedinUrl} rel="noreferrer" target="_blank">
+                    LinkedIn verification
+                  </a>
+                  <a className="underline underline-offset-4" href={person.sourceUrl} rel="noreferrer" target="_blank">
+                    {person.sourceLabel}
+                  </a>
                 </div>
-                <p className="text-muted-foreground">{person.title}</p>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-3 text-sm leading-relaxed">
-                <p>{person.why}</p>
-                <Separator />
-                <p>
-                  <span className="font-medium">Check before you write. </span>
-                  {person.verify}
-                </p>
-                <p className="text-muted-foreground">
-                  {person.evidenceGrade} · {person.asOf}
-                </p>
-                <a
-                  className="underline underline-offset-4"
-                  href={person.sourceUrl}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {person.sourceLabel}
-                </a>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section className="mt-8">
         <h2 className="font-heading text-2xl">Cross-verify</h2>
-        <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed">
+        <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed">
           {account.checklist.map((item) => (
             <li key={item}>{item}</li>
           ))}
-        </ul>
-        <Link href="/method" className={`${buttonVariants({ variant: "outline" })} mt-4`}>
-          How the score is built
-        </Link>
+        </ol>
       </section>
+
+      <div className="mt-8">
+        <Link href="/accounts" className={buttonVariants({ variant: "outline" })}>
+          Back to accounts
+        </Link>
+      </div>
     </SiteShell>
   )
 }

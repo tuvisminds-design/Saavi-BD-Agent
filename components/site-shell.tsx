@@ -24,7 +24,7 @@ export function SiteShell({
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 md:flex-row md:items-end md:justify-between md:px-6">
           <div>
             <p className="text-xs tracking-[0.16em] text-muted-foreground uppercase">
-              IntelliBuddies · IB-X · Pune
+              IntelliBuddies · IB-X · ₹500–1,000 crore
             </p>
             <Link href="/" className="font-heading text-2xl text-foreground">
               Lead qualification desk
@@ -51,8 +51,8 @@ export function SiteShell({
       <main className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-10">{children}</main>
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-sm text-muted-foreground md:flex-row md:justify-between md:px-6">
-          <p>Compiled {COMPILED_ON}. Every scored figure has a source you can open.</p>
-          <p>LinkedIn is not scraped. Profiles are not a source on this desk.</p>
+          <p>Compiled {COMPILED_ON}. Revenue is the Moneycontrol sales line.</p>
+          <p>LinkedIn is opened to verify the company and the title. It is not scraped.</p>
         </div>
       </footer>
     </div>

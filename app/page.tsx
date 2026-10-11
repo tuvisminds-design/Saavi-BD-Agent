@@ -4,107 +4,120 @@ import { SiteShell } from "@/components/site-shell"
 import { TierBadge } from "@/components/tier-badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { evidenceGap, pursueNow, tierCounts } from "@/lib/accounts"
-import { tierLabel } from "@/lib/qualification"
+import { byTier, tierCounts } from "@/lib/accounts"
+import { formatScore, tierLabel } from "@/lib/qualification"
 
 export default function HomePage() {
   const counts = tierCounts()
-  const pursue = pursueNow()
-  const gaps = evidenceGap()
+  const high = byTier("high")
+  const medium = byTier("medium")
 
   return (
     <SiteShell current="/">
       <div className="flex flex-col gap-8">
         <section className="max-w-3xl">
           <h1 className="font-heading text-4xl leading-tight md:text-5xl">
-            Pune manufacturers worth a first meeting
+            Call only the ₹500–1,000 crore equipment leads
           </h1>
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-            IB-X is IntelliBuddies’ conversational AI, workflow, and RPA stack.
-            It can run on-prem and connects to SAP, Oracle, and Microsoft 365.
-            This desk asks which Pune heavy-equipment companies are large
-            enough, and evidenced enough, for a first meeting.
+            Inbound names in this revenue band convert slowly because most of
+            them are not equipment companies, and the famous Pune plants are
+            far larger than the band. This desk scores each account from 0 to
+            1. Above 0.80 is highly qualified. 0.50 to 0.80 stays in the file.
+            Under 0.50, or outside the band, is cut off.
           </p>
         </section>
 
         <Card>
           <CardHeader>
-            <CardTitle>Who belongs in the file</CardTitle>
+            <CardTitle>The two gates, then the score</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-2 text-sm leading-relaxed md:grid-cols-2">
-            <p>India. Audited revenue above ₹500 crore, with the working priority above ₹1,000 crore.</p>
-            <p>Heavy equipment or capital goods, including process and industrial equipment.</p>
-            <p>A Pune site that is more than none. An engineering centre alone is a partial gate.</p>
-            <p>Every figure links to a filing, a company page, a rating rationale, or a press report. LinkedIn is not a source.</p>
+            <p>
+              Revenue is the latest annual sales line on Moneycontrol. It has
+              to read between ₹500 crore and ₹1,000 crore. An older year that
+              used to fit does not count.
+            </p>
+            <p>
+              The company has to make process equipment, heavy equipment, or
+              industrial machinery. A random manufacturer inside the band is
+              cut off before anyone builds a persona.
+            </p>
+            <p>
+              Pune is a score, not a gate. A plant would add 0.15. A sales
+              office adds 0.05. No Pune site adds nothing.
+            </p>
+            <p>
+              LinkedIn verifies the company page and the person’s title. It is
+              not the revenue source, and it is not scraped.
+            </p>
           </CardContent>
         </Card>
 
         <section className="grid gap-3 sm:grid-cols-3">
-          {(["pursue", "verify", "hold"] as const).map((tier) => (
-            <Card key={tier}>
-              <CardHeader>
-                <CardTitle>{tierLabel(tier)}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="font-heading text-4xl">{counts[tier]}</p>
-                <p className="mt-1 text-muted-foreground">
-                  {tier === "pursue" && "Gates passed and score at least 75."}
-                  {tier === "verify" && "Score at least 60, or a partial Pune site, a revenue band, or a rating-agency figure."}
-                  {tier === "hold" && "Competitor, conflicting or missing revenue, or a score that does not clear Verify."}
-                </p>
-              </CardContent>
-            </Card>
+          {(
+            [
+              ["high", "Above 0.80. Book the first meeting."],
+              ["medium", "0.50 to 0.80. Close the gap on the dossier, then call."],
+              ["cutoff", "Under 0.50, wrong product, or outside the Moneycontrol band."],
+            ] as const
+          ).map(([tier, note]) => (
+            <Link key={tier} href={`/accounts?tier=${tier}`}>
+              <Card className="h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between gap-3">
+                    <span className="font-heading text-4xl">{counts[tier]}</span>
+                    <TierBadge tier={tier} />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm leading-relaxed text-muted-foreground">
+                  {tierLabel(tier)}. {note}
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </section>
 
         <section>
-          <div className="mb-3 flex items-end justify-between gap-3">
-            <h2 className="font-heading text-2xl">Pursue now</h2>
-            <Link href="/accounts" className={buttonVariants({ variant: "outline", size: "sm" })}>
-              All accounts
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+            <h2 className="font-heading text-2xl">Highly qualified</h2>
+            <Link href="/personas" className={buttonVariants({ variant: "outline", size: "sm" })}>
+              Two-minute persona
             </Link>
           </div>
           <div className="grid gap-3">
-            {pursue.map((account) => (
-                <Link key={account.slug} href={`/accounts/${account.slug}`}>
-                  <Card className="hover:bg-accent/40">
-                    <CardHeader>
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <CardTitle>{account.name}</CardTitle>
-                        <div className="flex items-center gap-2">
-                          <span className="font-heading text-2xl">{account.score}</span>
-                          <TierBadge tier={account.tier} />
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="text-muted-foreground">
-                      <p>{account.revenueLabel}</p>
-                      <p className="mt-1">{account.location}</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+            {high.map((account) => (
+              <Link key={account.slug} href={`/accounts/${account.slug}`}>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex flex-wrap items-center justify-between gap-3">
+                      <span>{account.name}</span>
+                      <span className="font-mono text-base">{formatScore(account.score)}</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm leading-relaxed text-muted-foreground">
+                    {account.revenueLabel}. {account.whatTheyMake}
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
           </div>
         </section>
 
         <section>
-          <h2 className="font-heading text-2xl">Evidence gap</h2>
-          <p className="mt-2 max-w-3xl text-muted-foreground">
-            These names stay in the file so a conflict or a missing audit is
-            visible. They are not qualified.
-          </p>
-          <div className="mt-4 grid gap-3">
-            {gaps.map((account) => (
+          <h2 className="mb-4 font-heading text-2xl">Medium qualified</h2>
+          <div className="grid gap-3">
+            {medium.map((account) => (
               <Link key={account.slug} href={`/accounts/${account.slug}`}>
                 <Card>
                   <CardHeader>
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <CardTitle>{account.name}</CardTitle>
-                      <TierBadge tier={account.tier} />
-                    </div>
+                    <CardTitle className="flex flex-wrap items-center justify-between gap-3">
+                      <span>{account.name}</span>
+                      <span className="font-mono text-base">{formatScore(account.score)}</span>
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="text-sm leading-relaxed text-muted-foreground">
-                    {account.holdReason}
+                    {account.revenueLabel}. {account.location}
                   </CardContent>
                 </Card>
               </Link>
@@ -114,12 +127,25 @@ export default function HomePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>LinkedIn is not used</CardTitle>
+            <CardTitle>Why the familiar Pune names are missing</CardTitle>
           </CardHeader>
-          <CardContent className="max-w-3xl leading-relaxed">
-            LinkedIn’s terms prohibit scraping, login automation, and bulk
-            collection of profiles. This desk does not do that. A profile
-            snippet is not a source, and no LinkedIn URL is stored here.
+          <CardContent className="max-w-3xl space-y-3 text-sm leading-relaxed">
+            <p>
+              On Moneycontrol’s latest year, Thermax is ₹10,694 crore, Bharat
+              Forge is ₹16,811 crore, and Kirloskar Pneumatic is ₹1,786 crore.
+              Action Construction Equipment, a crane maker, is ₹3,280 crore.
+              Sanghvi Movers moved from ₹782 crore in Mar 2025 to ₹1,070 crore
+              in Mar 2026, so the latest year is over the ceiling.
+            </p>
+            <p>
+              The names that survive are process-equipment and industrial
+              machinery companies inside the band. Two of them clear 0.80
+              without a Pune plant. Pune still adds points when a source shows
+              a plant or a branch.
+            </p>
+            <Link href="/accounts?tier=cutoff" className="inline-block underline underline-offset-4">
+              See the cut-off list
+            </Link>
           </CardContent>
         </Card>
       </div>

@@ -15,21 +15,27 @@ import {
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { DeskAccount } from "@/lib/accounts"
-import { tierLabel } from "@/lib/qualification"
+import { formatScore, tierLabel } from "@/lib/qualification"
 import type { Tier } from "@/lib/types"
 
 type TierFilter = "all" | Tier
 
-export function AccountBrowser({ accounts }: { accounts: DeskAccount[] }) {
+export function AccountBrowser({
+  accounts,
+  initialTier = "all",
+}: {
+  accounts: DeskAccount[]
+  initialTier?: TierFilter
+}) {
   const [query, setQuery] = useState("")
-  const [tier, setTier] = useState<TierFilter>("all")
+  const [tier, setTier] = useState<TierFilter>(initialTier)
 
   const counts = useMemo(() => {
     return {
       all: accounts.length,
-      pursue: accounts.filter((account) => account.tier === "pursue").length,
-      verify: accounts.filter((account) => account.tier === "verify").length,
-      hold: accounts.filter((account) => account.tier === "hold").length,
+      high: accounts.filter((account) => account.tier === "high").length,
+      medium: accounts.filter((account) => account.tier === "medium").length,
+      cutoff: accounts.filter((account) => account.tier === "cutoff").length,
     }
   }, [accounts])
 
@@ -42,11 +48,11 @@ export function AccountBrowser({ accounts }: { accounts: DeskAccount[] }) {
       const haystack = [
         account.name,
         account.legalName,
-        account.cin,
         account.location,
         account.whatTheyMake,
         account.revenueLabel,
         account.ibxFit,
+        account.cutoffReason,
         people,
       ]
         .filter(Boolean)
@@ -66,7 +72,7 @@ export function AccountBrowser({ accounts }: { accounts: DeskAccount[] }) {
           <Input
             value={query}
             onValueChange={(value) => setQuery(value)}
-            placeholder="Name, CIN, place, or product"
+            placeholder="Name, place, or product"
             className="h-10 bg-card"
           />
         </label>
@@ -75,9 +81,9 @@ export function AccountBrowser({ accounts }: { accounts: DeskAccount[] }) {
           onValueChange={(value) => {
             if (
               value === "all" ||
-              value === "pursue" ||
-              value === "verify" ||
-              value === "hold"
+              value === "high" ||
+              value === "medium" ||
+              value === "cutoff"
             ) {
               setTier(value)
             }
@@ -87,9 +93,9 @@ export function AccountBrowser({ accounts }: { accounts: DeskAccount[] }) {
             {(
               [
                 ["all", `All ${counts.all}`],
-                ["pursue", `${tierLabel("pursue")} ${counts.pursue}`],
-                ["verify", `${tierLabel("verify")} ${counts.verify}`],
-                ["hold", `${tierLabel("hold")} ${counts.hold}`],
+                ["high", `${tierLabel("high")} ${counts.high}`],
+                ["medium", `${tierLabel("medium")} ${counts.medium}`],
+                ["cutoff", `${tierLabel("cutoff")} ${counts.cutoff}`],
               ] as const
             ).map(([value, label]) => (
               <TabsTrigger key={value} value={value}>
@@ -104,7 +110,7 @@ export function AccountBrowser({ accounts }: { accounts: DeskAccount[] }) {
         <div className="border border-dashed border-foreground/30 bg-card px-4 py-12 text-center">
           <p className="font-heading text-2xl">No account matches.</p>
           <p className="mx-auto mt-2 max-w-md text-muted-foreground">
-            Nothing in this thirteen-company file matches that search
+            Nothing in this file matches that search
             {tier !== "all" ? ` inside ${tierLabel(tier)}` : ""}. Clear the
             box, or set the tier back to All.
           </p>
@@ -137,11 +143,12 @@ export function AccountBrowser({ accounts }: { accounts: DeskAccount[] }) {
                       </CardTitle>
                       <CardDescription className="mt-1">
                         {account.legalName}
-                        {account.cin ? ` · ${account.cin}` : ""}
                       </CardDescription>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-sm">{account.score}</span>
+                      <span className="font-mono text-sm">
+                        {formatScore(account.score)}
+                      </span>
                       <TierStamp tier={account.tier} />
                     </div>
                   </div>
@@ -149,9 +156,9 @@ export function AccountBrowser({ accounts }: { accounts: DeskAccount[] }) {
                 <CardContent className="flex flex-col gap-3">
                   <p>{account.revenueLabel}</p>
                   <p className="text-muted-foreground">{account.location}</p>
-                  {account.holdReason ? (
+                  {account.cutoffReason ? (
                     <p className="border-l-2 border-hold pl-3 text-sm">
-                      {account.holdReason}
+                      {account.cutoffReason}
                     </p>
                   ) : null}
                   <Link

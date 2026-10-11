@@ -1,176 +1,68 @@
-import type { Account, RevenueGate, Tier } from "@/lib/types"
+import type { Account, SectorFit, Tier } from "@/lib/types"
 
-export const COMPILED_ON = "9 October 2026"
+export const COMPILED_ON = "11 October 2026"
 
-export const COMPETITOR_PENALTY = 15
+export const BAND_LOW = 500
+export const BAND_HIGH = 1000
 
-export const REVENUE_LINE_CRORE = 500
+/** Highly qualified is strictly above this. 0.80 itself stays medium. */
+export const HIGH_LINE = 0.8
+export const MEDIUM_LINE = 0.5
 
 export const FACTOR_GUIDE = [
-  { id: "revenue", label: "Revenue scale", max: 20 },
-  { id: "sector", label: "Sector fit", max: 15 },
-  { id: "pune", label: "Pune operating weight", max: 10 },
-  { id: "process", label: "Process surface for IB-X", max: 20 },
-  { id: "committee", label: "Named buying committee", max: 15 },
-  { id: "trigger", label: "Public trigger", max: 10 },
-  { id: "evidence", label: "Evidence quality", max: 10 },
+  { id: "revenue", label: "Moneycontrol band", max: 20 },
+  { id: "sector", label: "Heavy or process equipment", max: 25 },
+  { id: "pune", label: "Pune operating weight", max: 15 },
+  { id: "persona", label: "Persona already named", max: 20 },
+  { id: "linkedin", label: "LinkedIn verification", max: 20 },
 ] as const
 
-export function revenuePoints(gate: RevenueGate, crore: number | null) {
-  if (gate === "audited") {
-    if (crore == null || crore < REVENUE_LINE_CRORE) return 0
-    if (crore >= 5000) return 20
-    if (crore >= 1000) return 16
-    return 12
-  }
-
-  if (gate === "rating") {
-    if (crore == null || crore < REVENUE_LINE_CRORE) return 0
-    if (crore >= 5000) return 18
-    if (crore >= 1000) return 14
-    return 10
-  }
-
-  if (gate === "band") return 6
-  return 0
-}
-
-export function baseScoreOf(account: Account) {
+export function pointsOf(account: Account) {
   return account.factors.reduce((sum, factor) => sum + factor.points, 0)
 }
 
-export function penaltyOf(account: Account) {
-  return account.sectorGate === "competitor" ? COMPETITOR_PENALTY : 0
+export function scoreOf(account: Account) {
+  return pointsOf(account) / 100
 }
 
-export function scoreOf(account: Account) {
-  return baseScoreOf(account) - penaltyOf(account)
+export function formatScore(score: number) {
+  return score.toFixed(2)
 }
 
 export function tierOf(account: Account): Tier {
+  if (!account.inBand || account.sectorFit === "other") return "cutoff"
   const score = scoreOf(account)
-  const revenueBlocked =
-    account.revenueGate === "unverified" || account.revenueGate === "conflict"
-
-  if (account.sectorGate === "competitor" || revenueBlocked) {
-    return "hold"
-  }
-
-  const sectorFits =
-    account.sectorGate === "core" || account.sectorGate === "process"
-  const revenueClears =
-    account.revenueGate === "audited" &&
-    account.revenueCrore != null &&
-    account.revenueCrore >= REVENUE_LINE_CRORE
-  const pursue =
-    account.puneGate !== "none" && sectorFits && revenueClears && score >= 75
-
-  if (pursue) return "pursue"
-
-  const partialGate =
-    score >= 60 ||
-    account.puneGate === "partial" ||
-    account.revenueGate === "band" ||
-    account.revenueGate === "rating"
-
-  if (partialGate) return "verify"
-  return "hold"
+  if (score > HIGH_LINE) return "high"
+  if (score >= MEDIUM_LINE) return "medium"
+  return "cutoff"
 }
 
 export function tierLabel(tier: Tier) {
-  if (tier === "pursue") return "Pursue"
-  if (tier === "verify") return "Verify"
-  return "Hold"
+  if (tier === "high") return "Highly qualified"
+  if (tier === "medium") return "Medium qualified"
+  return "Cut off"
 }
 
-export type GateRow = {
-  label: string
-  state: "Pass" | "Fail" | "Partial"
-  detail: string
-}
-
-export function gateRows(account: Account): GateRow[] {
-  const score = scoreOf(account)
-  const pune =
-    account.puneGate === "none"
-      ? "Fail"
-      : account.puneGate === "partial"
-        ? "Partial"
-        : "Pass"
-  const sector =
-    account.sectorGate === "core" || account.sectorGate === "process"
-      ? "Pass"
-      : "Fail"
-  const revenue =
-    account.revenueGate === "audited" &&
-    account.revenueCrore != null &&
-    account.revenueCrore >= REVENUE_LINE_CRORE
-      ? "Pass"
-      : account.revenueGate === "band" || account.revenueGate === "rating"
-        ? "Partial"
-        : "Fail"
-
-  return [
-    {
-      label: "Pune presence is not none",
-      state: pune,
-      detail: account.location,
-    },
-    {
-      label: "Sector is core heavy equipment or process equipment",
-      state: sector,
-      detail: account.whatTheyMake,
-    },
-    {
-      label: "Revenue is audited and at least ₹500 crore",
-      state: revenue,
-      detail: account.revenueLabel,
-    },
-    {
-      label: "Score is at least 75",
-      state: score >= 75 ? "Pass" : "Fail",
-      detail: `${score} points, the sum of the factor rows`,
-    },
-    {
-      label: "Not an industrial-automation competitor",
-      state: account.sectorGate === "competitor" ? "Fail" : "Pass",
-      detail:
-        account.sectorGate === "competitor"
-          ? `Penalty of ${COMPETITOR_PENALTY} points, and the tier is Hold`
-          : "No competitor penalty",
-    },
-  ]
+export function sectorLabel(fit: SectorFit) {
+  if (fit === "equipment") return "Process or heavy equipment"
+  if (fit === "industrial") return "Industrial machinery"
+  return "Not equipment"
 }
 
 export function decisionSentence(account: Account) {
+  const score = formatScore(scoreOf(account))
+  if (!account.inBand) {
+    return `Moneycontrol sales are outside ₹${BAND_LOW}–${BAND_HIGH} crore, so the account is cut off before the ${score} factor score can put it on a call list.`
+  }
+  if (account.sectorFit === "other") {
+    return `The revenue band passes, and the factor score is ${score}, but the company is not heavy equipment or industrial machinery. Random ₹${BAND_LOW}–${BAND_HIGH} crore names are cut here.`
+  }
   const tier = tierOf(account)
-  const score = scoreOf(account)
-
-  if (account.sectorGate === "competitor") {
-    return `${account.name} sells industrial or building automation. The competitor penalty is applied and the tier is Hold. A partner conversation is the only use of this file.`
+  if (tier === "high") {
+    return `The score is ${score}, above ${HIGH_LINE.toFixed(2)}. Revenue, equipment fit, a named buyer, and a LinkedIn company check all clear. This is a highly qualified lead.`
   }
-
-  if (account.revenueGate === "conflict") {
-    return `Public revenue figures conflict. Nothing is scored in rupees, and the tier is Hold until a statutory filing is opened.`
+  if (tier === "medium") {
+    return `The score is ${score}, inside ${MEDIUM_LINE.toFixed(2)}–${HIGH_LINE.toFixed(2)}. Keep it, and close the gap named on the dossier before a proposal.`
   }
-
-  if (account.revenueGate === "unverified") {
-    return `No audited rupee revenue is in this file. The tier is Hold until MCA Form AOC-4, or the company’s own annual report, is read.`
-  }
-
-  if (tier === "pursue") {
-    return `Pune presence, sector, and audited revenue all clear, and the score is ${score}. The tier is Pursue.`
-  }
-
-  if (tier === "verify") {
-    const open = gateRows(account)
-      .filter((row) => row.state !== "Pass")
-      .map((row) => row.label.replace(/\.$/, ""))
-    const because = open.length
-      ? open.join("; ")
-      : "a partial gate is open"
-    return `The score is ${score}. Pursue stays shut because: ${because}. The tier is Verify.`
-  }
-
-  return `The score is ${score}, under the verify line, and no partial gate is open. The tier is Hold.`
+  return `The score is ${score}, under ${MEDIUM_LINE.toFixed(2)}. Cut it off.`
 }

@@ -6,109 +6,107 @@ export default function MethodPage() {
   return (
     <SiteShell current="/method">
       <div className="max-w-3xl">
-        <h1 className="font-heading text-4xl">How an account earns a score</h1>
+        <h1 className="font-heading text-4xl">How a lead gets a number</h1>
         <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-          The desk is a qualification file, not a scraper. A point exists only
-          when a sentence on a public page supports it. If two sources
-          disagree, the revenue gate fails and the account stays on Hold.
+          The score runs from 0 to 1. Above 0.80 is highly qualified. From
+          0.50 to 0.80, including 0.80, is medium. Under 0.50 is cut off. Two
+          gates can cut a lead off even when the arithmetic would look fine.
         </p>
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle>Pursue</CardTitle>
+            <CardTitle>Above 0.80</CardTitle>
           </CardHeader>
           <CardContent className="leading-relaxed">
-            Pune presence is not none, the sector is core heavy equipment or
-            process equipment, revenue is audited and at least ₹500 crore, and
-            the score is 75 or more. A competitor never reaches this tier.
+            Latest Moneycontrol sales are inside ₹500–1,000 crore, the company
+            makes process or heavy equipment, buyers are already named, and
+            the LinkedIn company page confirms name, place, and industry.
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Verify</CardTitle>
+            <CardTitle>0.50 to 0.80</CardTitle>
           </CardHeader>
           <CardContent className="leading-relaxed">
-            The account missed Pursue, and either the score is at least 60, or
-            Pune is only partial, or revenue is a band, or the figure comes
-            from a rating rationale rather than the company’s own filing.
+            The band and the product pass, and something is thin: no Pune
+            site, industrial machinery rather than process equipment, or a
+            missing CFO. Keep the lead. Do not write a fresh persona.
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Hold</CardTitle>
+            <CardTitle>Cut off</CardTitle>
           </CardHeader>
           <CardContent className="leading-relaxed">
-            The company sells industrial automation, revenue is missing or in
-            conflict, or the score sits below the verify line with no partial
-            gate. A plant in Pune does not override a failed revenue gate.
+            Sales are under ₹500 crore or over ₹1,000 crore, or the company is
+            not equipment. A score under 0.50 is also cut off. Do not include
+            these on the call list.
           </CardContent>
         </Card>
       </div>
 
       <section className="mt-8">
-        <h2 className="font-heading text-2xl">Factors</h2>
-        <div className="mt-4 overflow-x-auto rounded-xl ring-1 ring-foreground/10">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-muted text-muted-foreground">
-              <tr>
-                <th className="px-3 py-2 font-medium">Factor</th>
-                <th className="px-3 py-2 font-medium">Maximum</th>
-              </tr>
-            </thead>
-            <tbody>
-              {FACTOR_GUIDE.map((factor) => (
-                <tr key={factor.id} className="border-t border-border">
-                  <td className="px-3 py-2">{factor.label}</td>
-                  <td className="px-3 py-2">{factor.max}</td>
-                </tr>
-              ))}
-              <tr className="border-t border-border">
-                <td className="px-3 py-2">Competitive overlap</td>
-                <td className="px-3 py-2">−15</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-          Revenue points are computed in code from the gate and the crore
-          figure. Audited revenue of at least ₹5,000 crore scores 20. Audited
-          revenue of at least ₹1,000 crore and under ₹5,000 crore scores 16.
-          Audited revenue of at least ₹500 crore and under ₹1,000 crore scores
-          12. A rating-agency figure scores two points under the audited band
-          it would have earned, and it does not clear the audited gate. A band
-          with no exact rupee amount scores 6. A conflict, an undated
-          foreign-currency claim, or no filing scores 0. The other six factors
-          are assessed against the maxima above. If the company sells
-          industrial or building automation, subtract 15 after the sum and
-          force Hold.
-        </p>
+        <h2 className="font-heading text-2xl">The five parts</h2>
+        <ul className="mt-4 flex flex-col gap-3">
+          {FACTOR_GUIDE.map((factor) => (
+            <li key={factor.id} className="border border-border bg-card p-4 text-sm leading-relaxed">
+              <p className="font-medium">
+                {factor.label}{" "}
+                <span className="font-mono text-muted-foreground">
+                  up to {(factor.max / 100).toFixed(2)}
+                </span>
+              </p>
+              <p className="mt-1 text-muted-foreground">{factorNote(factor.id)}</p>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      <section className="mt-8 max-w-3xl">
-        <h2 className="font-heading text-2xl">What this desk does not do</h2>
-        <div className="mt-3 flex flex-col gap-3 leading-relaxed">
-          <p>
-            LinkedIn’s terms prohibit scraping, login automation, and bulk
-            collection of profiles. This desk does none of that. It does not
-            store a LinkedIn URL. A profile snippet is not a current title.
-          </p>
-          <p>
-            Names appear only when an annual report, an exchange filing, a
-            company leadership page, a rating rationale, or a named article
-            prints them. A professional-network snippet is not enough for a
-            current title. Where a CIO is unpublished, the dossier says the
-            seat is empty.
-          </p>
-          <p>
-            Personal email addresses and mobile numbers are not collected.
-            Company sites are linked. You cross-check by opening the source,
-            matching the legal name, the period, and the figure, then deciding
-            whether a later filing has replaced it.
-          </p>
-        </div>
+      <section className="mt-8 max-w-3xl space-y-3 text-sm leading-relaxed">
+        <h2 className="font-heading text-2xl">Moneycontrol, then LinkedIn</h2>
+        <p>
+          Revenue is the latest annual Sales row on the Moneycontrol profit and
+          loss page, in ₹ crore. Consolidated is used when that is the view.
+          A news line that says “sources put revenue at” is not the sales row.
+          SEDEMAC Mechatronics has a Moneycontrol page and no sales row yet, so
+          it is not scored.
+        </p>
+        <p>
+          If Moneycontrol’s default view is standalone and the company reports
+          a larger group figure, the group figure decides the band. Tega
+          Industries is the example: standalone sales are ₹789 crore, and the
+          FY26 group total income is ₹1,773.6 crore.
+        </p>
+        <p>
+          LinkedIn is the verification pass. Open the company page and check
+          the name, the city, and the industry. Open a profile or a people
+          search and check the title. If LinkedIn prints a revenue number that
+          disagrees with Moneycontrol, Moneycontrol wins. Profiles are not
+          collected in bulk, and nothing here logs into LinkedIn.
+        </p>
+        <p>
+          Personal email addresses are not stored. An ERP name is not invented.
+          Where a seat is missing, the dossier says so.
+        </p>
       </section>
     </SiteShell>
   )
+}
+
+function factorNote(id: string) {
+  if (id === "revenue") {
+    return "0.20 only when the latest Moneycontrol sales figure is from ₹500 crore to ₹1,000 crore. Outside that, the account is cut off and this part is 0."
+  }
+  if (id === "sector") {
+    return "0.25 for process or heavy equipment. 0.15 for industrial machinery such as gears, motors, or plastic machines. 0 for anything else, and that account is cut off."
+  }
+  if (id === "pune") {
+    return "0.15 for a Pune plant stated in a source. 0.05 for a Pune branch or sales office. 0 when the sources do not mention Pune."
+  }
+  if (id === "persona") {
+    return "0.20 when the economic buyer and the finance owner are already named. 0.10 when only the operating executives are named. 0.04 when you still have to find them."
+  }
+  return "0.20 when a public LinkedIn company page confirms the name, the industry, and an Indian headquarters. Revenue on that page is not used."
 }

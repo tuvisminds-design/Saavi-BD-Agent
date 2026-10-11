@@ -4,9 +4,9 @@ import type { Tier } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
 const tone: Record<Tier, string> = {
-  pursue: "border-pursue/50 bg-pursue/10 text-pursue",
-  verify: "border-verify/50 bg-verify/15 text-verify",
-  hold: "border-hold/50 bg-hold/10 text-hold",
+  high: "border-pursue/50 bg-pursue/10 text-pursue",
+  medium: "border-verify/50 bg-verify/15 text-verify",
+  cutoff: "border-hold/50 bg-hold/10 text-hold",
 }
 
 export function TierStamp({ tier }: { tier: Tier }) {

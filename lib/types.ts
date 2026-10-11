@@ -1,24 +1,11 @@
-export type Tier = "pursue" | "verify" | "hold"
+export type Tier = "high" | "medium" | "cutoff"
 
-export type PuneGate = "full" | "partial" | "none"
-export type SectorGate = "core" | "process" | "adjacent" | "competitor"
-export type RevenueGate =
-  | "audited"
-  | "band"
-  | "rating"
-  | "unverified"
-  | "conflict"
+export type SectorFit = "equipment" | "industrial" | "other"
 
-export type EvidenceGrade =
-  | "Statutory filing"
-  | "Company page"
-  | "Rating rationale"
-  | "Press"
-  | "Aggregator"
-  | "Stale or conflicting"
+export type FactorId = "revenue" | "sector" | "pune" | "persona" | "linkedin"
 
 export type Factor = {
-  id: string
+  id: FactorId
   label: string
   points: number
   max: number
@@ -27,14 +14,20 @@ export type Factor = {
   sourceUrl: string
 }
 
+export type BuyingRole =
+  | "Economic buyer"
+  | "Finance owner"
+  | "Technical buyer"
+  | "Process owner"
+
 export type DecisionMaker = {
   name: string
   title: string
-  buyingRole: string
+  buyingRole: BuyingRole
   why: string
-  verify: string
-  evidenceGrade: EvidenceGrade
-  asOf: string
+  /** Public profile, or a LinkedIn people search when no profile URL was indexed. */
+  linkedinUrl: string
+  linkedinNote: string
   sourceLabel: string
   sourceUrl: string
 }
@@ -43,20 +36,22 @@ export type Account = {
   slug: string
   name: string
   legalName: string
-  cin?: string
   website: string
   location: string
   whatTheyMake: string
+  /** Latest annual sales used by the gate, in ₹ crore, as shown on Moneycontrol. */
+  revenueCrore: number
   revenueLabel: string
-  /** Rupee crore figure used by the scorer. Null when the file refuses to score one. */
-  revenueCrore: number | null
   period: string
-  puneGate: PuneGate
-  sectorGate: SectorGate
-  revenueGate: RevenueGate
+  moneycontrolUrl: string
+  /** True only when Moneycontrol's latest annual sales sit in ₹500–1,000 crore. */
+  inBand: boolean
+  sectorFit: SectorFit
+  linkedinCompanyUrl?: string
+  linkedinConfirms?: string
   ibxFit: string
   factors: Factor[]
   people: DecisionMaker[]
   checklist: string[]
-  holdReason?: string
+  cutoffReason?: string
 }

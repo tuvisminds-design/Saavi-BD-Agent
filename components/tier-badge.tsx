@@ -4,9 +4,9 @@ import type { Tier } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
 const styles: Record<Tier, string> = {
-  pursue: "bg-primary text-primary-foreground",
-  verify: "bg-accent text-accent-foreground",
-  hold: "bg-destructive/15 text-destructive",
+  high: "bg-primary text-primary-foreground",
+  medium: "bg-accent text-accent-foreground",
+  cutoff: "bg-destructive/15 text-destructive",
 }
 
 export function TierBadge({ tier }: { tier: Tier }) {

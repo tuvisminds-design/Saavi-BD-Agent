@@ -1,12 +1,18 @@
-# Pune lead desk
+# Lead qualification desk
 
-A qualification file for [IntelliBuddies](https://intellibuddies.com/) IB-X, aimed at heavy-equipment and process-equipment manufacturers in India with a Pune operating site and audited revenue above ₹500 crore.
+A working file for [IntelliBuddies](https://intellibuddies.com/) IB-X. It qualifies Indian equipment and industrial-machinery companies whose latest Moneycontrol sales are between ₹500 crore and ₹1,000 crore.
 
-IB-X is conversational AI, workflow, and RPA. It can run on-prem and connects to SAP, Oracle, and Microsoft 365. The desk does not pitch every name in Pune. It scores thirteen accounts from public sources and marks each one Pursue, Verify, or Hold.
+Inbound leads in that band convert slowly when the product is wrong, and persona work gets repeated for every name. This desk applies one score, from 0 to 1:
+
+- Above 0.80: highly qualified
+- 0.50 to 0.80: medium qualified
+- Under 0.50, outside the band, or not equipment: cut off
+
+Pune adds points when a source shows a plant or a branch. It is not a substitute for the revenue band. Famous Pune manufacturers such as Thermax and Bharat Forge are above ₹1,000 crore on the latest Moneycontrol year, so they are cut off from this queue.
 
 ## Run
 
-The app expects Node.js 26.11.1 or newer. If an older `node` is first on `PATH`, put 26.11.1 ahead of it.
+The app expects Node.js 26.11.1 or newer.
 
 ```bash
 nvm install 26.11.1
@@ -15,21 +21,13 @@ npm install
 npm run dev
 ```
 
-The dev server listens on port 4179 and on `0.0.0.0`. Open [http://127.0.0.1:4179](http://127.0.0.1:4179).
+Open [http://127.0.0.1:4179](http://127.0.0.1:4179).
 
-`npm run typecheck` and `npm run lint` check the TypeScript and ESLint setup.
+`npm run typecheck` checks TypeScript.
 
-## Evidence rules
+## Evidence
 
-- A revenue figure is scored only when a filing, an annual report, or a rating rationale states it.
-- A band (“over ₹500 crore”), a conflict between sources, or an undated foreign-currency claim does not qualify the account. The dossier says the figure is unverified.
-- Each factor shows its points, a one-sentence justification, and a URL you can open.
-- Decision makers are named only when a filing, a company page, a rating note, or a press report names them. The dossier says what to re-check and how strong the evidence is.
-- Personal email addresses and phone numbers are not collected.
-- Do not invent an ERP name, a street address, or a CIO. Where the source is silent, the file says so.
-
-The score is computed in code: revenue scale 20, sector fit 15, Pune weight 10, process surface 20, named buying committee 15, public trigger 10, evidence quality 10. A company that sells industrial automation takes a further −15 and is Hold.
-
-## LinkedIn
-
-LinkedIn’s terms prohibit scraping, login automation, and bulk collection of profiles. This desk does not do that. It does not store LinkedIn URLs. If a profile snippet conflicts with a filing, the filing is used and the profile is left out.
+- Revenue is the latest annual Sales line on Moneycontrol, in ₹ crore.
+- If that view is standalone and the company reports a larger group total, the group figure decides the band.
+- LinkedIn company pages and people searches verify identity and title. They are not scraped, and they do not set the revenue number.
+- A person is named only when a company page, a filing report, or a public profile names them.
