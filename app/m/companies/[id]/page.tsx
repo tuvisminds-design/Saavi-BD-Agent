@@ -111,7 +111,7 @@ export default async function MobileCompany({
         <input type="hidden" name="next" value={`/m/companies/${company.id}`} />
         <p className="font-heading text-xl">Remove this company</p>
         <label className="flex min-h-11 items-center gap-2 text-sm">
-          <input type="checkbox" name="confirm" className="size-4" />
+          <input suppressHydrationWarning type="checkbox" name="confirm" className="size-4" />
           I want this record removed
         </label>
         <Button type="submit" variant="outline" className="min-h-11">

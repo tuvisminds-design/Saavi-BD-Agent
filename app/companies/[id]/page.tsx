@@ -171,7 +171,7 @@ export default async function CompanyPage({
         <p className="font-heading text-xl">Remove this company</p>
         <p className="text-sm text-muted-foreground">Deletes the company, its executives, evidence, and signals.</p>
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="confirm" className="size-4" />
+          <input suppressHydrationWarning type="checkbox" name="confirm" className="size-4" />
           I want this record removed
         </label>
         <Button type="submit" variant="outline" className="w-fit">

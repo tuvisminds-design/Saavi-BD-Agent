@@ -28,7 +28,7 @@ export default async function MobileSignals({
         <input type="hidden" name="next" value="/m/signals" />
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">
           Company
-          <select className={selectClass} name="companyId" required defaultValue="">
+          <select suppressHydrationWarning className={selectClass} name="companyId" required defaultValue="">
             <option value="" disabled>
               Choose a company
             </option>

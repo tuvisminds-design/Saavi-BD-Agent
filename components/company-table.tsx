@@ -51,7 +51,7 @@ export function CompanyTable({ rows }: { rows: CompanyRow[] }) {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">
           City
-          <select className={selectClass} value={city} onChange={(event) => setCity(event.target.value)}>
+          <select suppressHydrationWarning className={selectClass} value={city} onChange={(event) => setCity(event.target.value)}>
             <option value="all">All cities</option>
             {cities.map((item) => (
               <option key={item} value={item}>
@@ -70,7 +70,7 @@ export function CompanyTable({ rows }: { rows: CompanyRow[] }) {
         </label>
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">
           CSR obligated
-          <select className={selectClass} value={csr} onChange={(event) => setCsr(event.target.value)}>
+          <select suppressHydrationWarning className={selectClass} value={csr} onChange={(event) => setCsr(event.target.value)}>
             <option value="all">All</option>
             <option value="Y">Yes</option>
             <option value="unknown">Not confirmed</option>
@@ -78,7 +78,7 @@ export function CompanyTable({ rows }: { rows: CompanyRow[] }) {
         </label>
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">
           Tag
-          <select className={selectClass} value={tag} onChange={(event) => setTag(event.target.value)}>
+          <select suppressHydrationWarning className={selectClass} value={tag} onChange={(event) => setTag(event.target.value)}>
             <option value="all">All</option>
             <option value="HOT">HOT</option>
             <option value="WARM">WARM</option>
@@ -87,7 +87,7 @@ export function CompanyTable({ rows }: { rows: CompanyRow[] }) {
         </label>
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">
           Status
-          <select className={selectClass} value={status} onChange={(event) => setStatus(event.target.value)}>
+          <select suppressHydrationWarning className={selectClass} value={status} onChange={(event) => setStatus(event.target.value)}>
             <option value="all">All</option>
             <option value="VERIFIED">VERIFIED</option>
             <option value="MEDIUM">MEDIUM</option>

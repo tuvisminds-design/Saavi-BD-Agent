@@ -32,7 +32,7 @@ export default async function SignalsPage({
       <form action={addSignalAction} className="mt-6 grid gap-3 rounded-lg border border-border p-4 md:grid-cols-2">
         <label className="flex flex-col gap-1 text-xs text-muted-foreground md:col-span-2">
           Company
-          <select className={selectClass} name="companyId" required defaultValue="">
+          <select suppressHydrationWarning className={selectClass} name="companyId" required defaultValue="">
             <option value="" disabled>
               Choose a company
             </option>
