@@ -1,5 +1,3 @@
-import Link from "next/link"
-
 import { CompanyTable, type CompanyRow } from "@/components/company-table"
 import { SiteShell } from "@/components/site-shell"
 import { buttonVariants } from "@/components/ui/button"
@@ -39,9 +37,9 @@ export default function HomePage() {
             usually not public, so those cells stay blank until a rep finds a source.
           </p>
         </div>
-        <Link href="/api/export" className={cn(buttonVariants())}>
+        <a href="/api/export" download="saavi-prospects.xlsx" className={cn(buttonVariants())}>
           Export Excel
-        </Link>
+        </a>
       </div>
       <CompanyTable rows={rows} />
     </SiteShell>
