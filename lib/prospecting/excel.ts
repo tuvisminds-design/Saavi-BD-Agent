@@ -123,6 +123,7 @@ export async function buildWorkbook(input: {
   companies: ExportCompany[]
   reviews: { company: string; reason: string; status: string }[]
   signals: { company: string; title: string; url: string; publishedAt: string; score: number }[]
+  qualifications?: { company: string; framework: string; element: string; known: string; missing: string; source: string }[]
 }) {
   const workbook = new ExcelJS.Workbook()
   const sheet = workbook.addWorksheet("Companies")
@@ -158,6 +159,17 @@ export async function buildWorkbook(input: {
     const row = signals.addRow([signal.company, signal.title, signal.url, signal.publishedAt, signal.score])
     if (signal.url.startsWith("https://")) {
       row.getCell(3).value = { text: signal.url, hyperlink: signal.url }
+    }
+  }
+
+  const qualification = workbook.addWorksheet("Qualification")
+  qualification.addRow(["Company", "Framework", "Element", "Known", "Missing", "Source"])
+  qualification.getRow(1).font = { bold: true }
+  qualification.views = [{ state: "frozen", ySplit: 1 }]
+  for (const item of input.qualifications ?? []) {
+    const row = qualification.addRow([item.company, item.framework, item.element, item.known, item.missing, item.source])
+    if (item.source.startsWith("https://")) {
+      row.getCell(6).value = { text: item.source, hyperlink: item.source }
     }
   }
 

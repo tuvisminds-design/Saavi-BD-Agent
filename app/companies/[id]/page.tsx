@@ -5,12 +5,52 @@ import { SiteShell } from "@/components/site-shell"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { deleteCompanyAction, pasteLinkedInAction } from "@/lib/prospecting/actions"
-import { evidenceFor, listCompanies, listExecutives, revenueLabel } from "@/lib/prospecting/db"
+import { evidenceFor, listCompanies, listExecutives, qualificationFor, revenueLabel } from "@/lib/prospecting/db"
 import { PERSONA_LABEL } from "@/lib/prospecting/labels"
 import { linkedInSearchLink } from "@/lib/prospecting/linkedin"
 
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
+
+function QualificationBlock({ companyId }: { companyId: number }) {
+  const view = qualificationFor(companyId)
+  if (!view) return null
+  const groups = [
+    ["MEDDPICC", view.meddpicc],
+    ["BANT", view.bant],
+    ["SPICED", view.spiced],
+  ] as const
+  return (
+    <section className="mt-8">
+      <h2 className="font-heading text-2xl">Qualification</h2>
+      <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+        MEDDPICC, BANT, and SPICED together. A line is filled only from a source already stored for this company.
+        Priority {view.priorityScore}/100. {view.priorityReason}
+      </p>
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+        {groups.map(([name, fields]) => (
+          <article key={name} className="rounded-lg border border-border p-4">
+            <h3 className="text-xs tracking-wide text-primary uppercase">{name}</h3>
+            <ul className="mt-3 flex flex-col gap-3 text-sm">
+              {Object.entries(fields).map(([element, field]) => (
+                <li key={element}>
+                  <p className="font-medium capitalize">{element.replaceAll("_", " ")}</p>
+                  <p>{field.known ?? "Missing"}</p>
+                  {field.missing ? <p className="text-muted-foreground">{field.missing}</p> : null}
+                  {field.sourceUrl ? (
+                    <a className="break-all text-primary underline-offset-4 hover:underline" href={field.sourceUrl}>
+                      Source
+                    </a>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
 
 export default async function CompanyPage({
   params,
@@ -107,6 +147,8 @@ export default async function CompanyPage({
           })}
         </ul>
       </section>
+
+      <QualificationBlock companyId={company.id} />
 
       <section className="mt-8">
         <h2 className="font-heading text-2xl">Company evidence</h2>

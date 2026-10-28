@@ -52,5 +52,6 @@ describe("excel export", () => {
     assert.equal(sheet.getRow(2).getCell(5).value, "")
     assert.ok(workbook.getWorksheet("Review Queue"))
     assert.ok(workbook.getWorksheet("Signals"))
+    assert.ok(workbook.getWorksheet("Qualification"))
   })
 })

@@ -1,5 +1,6 @@
 import { buildWorkbook } from "@/lib/prospecting/excel"
-import { listReviews, listSignals, toExportCompanies } from "@/lib/prospecting/db"
+import { qualificationRows } from "@/lib/prospecting/frameworks"
+import { listCompanies, listReviews, listSignals, qualificationFor, toExportCompanies } from "@/lib/prospecting/db"
 
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
@@ -19,6 +20,10 @@ export async function GET() {
       publishedAt: signal.publishedAt,
       score: signal.score,
     })),
+    qualifications: listCompanies().flatMap((company) => {
+      const view = qualificationFor(company.id)
+      return view ? qualificationRows(company.name, view) : []
+    }),
   })
   return new Response(new Uint8Array(bytes), {
     headers: {

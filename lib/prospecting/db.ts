@@ -2,7 +2,8 @@ import { mkdirSync } from "node:fs"
 import path from "node:path"
 import { DatabaseSync } from "node:sqlite"
 
-import { bandTag, csrFromTurnover } from "@/lib/prospecting/icp"
+import { qualifyAccount } from "@/lib/prospecting/frameworks"
+import { bandTag, csrFromTurnover, loadIcp } from "@/lib/prospecting/icp"
 import { loadPersonas, mapTitle } from "@/lib/prospecting/role-map"
 import { linkedInSearchLink, validateLinkedInProfile, type LinkedInSource } from "@/lib/prospecting/linkedin"
 import { SCHEMA } from "@/lib/prospecting/schema"
@@ -470,6 +471,34 @@ export function listEvents(db = getDb()) {
       occurredAt: string
     }[]
   ).map((event) => ({ ...event, payload: JSON.parse(event.payload) as Record<string, unknown> }))
+}
+
+export function qualificationFor(companyId: number, db = getDb()) {
+  const company = listCompanies(db).find((row) => row.id === companyId)
+  if (!company) return null
+  const icp = loadIcp()
+  const hr = listExecutives(companyId, db).find((row) => row.persona === "HR" && row.full_name)
+  const evidence = evidenceFor(companyId, db)
+  const hrSource = evidence.find((row) => row.executiveId === hr?.id && row.field === "full_name")
+  const location = company.hq_location ?? ""
+  return qualifyAccount(
+    {
+      companyName: company.name,
+      revenueLabel: revenueLabel(company) || null,
+      revenueSourceUrl: company.revenue_source_url,
+      inBand: bandTag(company.revenue_inr_crore, false, icp).inIcp,
+      location: location || null,
+      priorityCity: icp.priority_cities.some((city) => location.toLowerCase().includes(city.toLowerCase())),
+      csrObligated: company.csr_obligated === 1,
+      hrName: hr?.full_name ?? null,
+      hrTitle: hr?.raw_title ?? null,
+      hrSourceUrl: hrSource?.sourceUrl ?? null,
+      signals: listSignals(db)
+        .filter((signal) => signal.companyId === companyId)
+        .map((signal) => ({ title: signal.title, url: signal.url })),
+    },
+    icp,
+  )
 }
 
 export function dueForReverify(db: DatabaseSync, today: string) {
