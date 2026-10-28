@@ -1,6 +1,6 @@
 # Saavi prospecting
 
-Internal sales desk for [Saavi](https://saavi.tuvisminds.com/) corporate gifting. It lists Indian companies in the ₹100–5,000 crore sales band, keeps gift-buyer names only when a filing or company page supports them, and exports the book to Excel.
+Internal sales desk for [Saavi](https://saavi.tuvisminds.com/) corporate gifting. It lists Indian companies in the ₹100–5,000 crore sales band and targets the HR head only, when a filing or company page names that person. The book exports to Excel.
 
 LinkedIn profile URLs are pasted by a rep, or imported later from a Sales Navigator CSV. The app builds a people-search link and does not request linkedin.com.
 

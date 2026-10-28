@@ -16,7 +16,7 @@ function mc(slug: string, revenue: number, basis: "standalone" | "consolidated")
     revenueSourceUrl: `${MC}/${slug}/`,
     revenueSourceType: "moneycontrol",
     executives: [],
-    review: "No leadership page or filing was collected for this company. Names stay blank.",
+    review: "No filing or company page collected here names the HR head. The HR cell stays blank.",
   }
 }
 
@@ -61,16 +61,7 @@ export const SEED: SeedCompany[] = [
         title: "Head – Human Resources",
         hits: [hit("Helena Susan", filing, "exchange_filing")],
       },
-      {
-        persona: "CEO_FOUNDER",
-        title: "Whole-time Director and CEO",
-        hits: [
-          hit("M. Karunakaran", filing, "exchange_filing"),
-          hit("M. Karunakaran", "https://www.shanthigears.com/wp-content/uploads/2026/06/Profile-of-Directors-1.pdf", "company_site"),
-        ],
-      },
     ],
-    review: "CSR, marketing, and procurement heads are not in the 3 September 2026 filing. The CFO on that filing is finance, not a gifting persona, so the name is not in the buyer columns.",
   },
   {
     name: "Data Patterns (India) Limited",
@@ -89,20 +80,7 @@ export const SEED: SeedCompany[] = [
         title: "VP-HR",
         hits: [hit("Lakshminarayanan K.V.", "https://www.datapatternsindia.com/aboutus/senior_management.php", "company_site")],
       },
-      {
-        persona: "CEO_FOUNDER",
-        title: "Chairman and Managing Director",
-        hits: [
-          hit("Srinivasagopalan Rangarajan", "https://www.datapatternsindia.com/aboutus/directors.php", "company_site"),
-          hit(
-            "Srinivasagopalan Rangarajan",
-            "https://www.datapatternsindia.com/investors/files/Proceedings-of-Annual-General-Meeting-31-July-2026.pdf",
-            "exchange_filing",
-          ),
-        ],
-      },
     ],
-    review: "CSR, marketing, and procurement are blank. The CFO is public on the company key-management page and is not a gifting persona.",
   },
   {
     name: "Centum Electronics Limited",
@@ -115,21 +93,9 @@ export const SEED: SeedCompany[] = [
     basis: "consolidated",
     revenueSourceUrl: `${MC}/centumelectronics-CE10/`,
     revenueSourceType: "moneycontrol",
-    executives: [
-      {
-        persona: "CEO_FOUNDER",
-        title: "Chairman and Managing Director",
-        hits: [
-          hit("Apparao Mallavarapu", "https://www.centumelectronics.com/management/", "company_site"),
-          hit(
-            "Apparao Mallavarapu",
-            "https://www.centumelectronics.com/wp-content/uploads/2026/09/Investor_Presentation.pdf",
-            "company_site",
-          ),
-        ],
-      },
-    ],
-    review: "HR, CSR, marketing, and procurement are blank. The management page lists Nanda Kishore Vempati without a title in the text collected here, so no HR name is stored.",
+    executives: [],
+    review:
+      "The management page lists Nanda Kishore Vempati without a title in the text collected here, so the HR name stays blank.",
   },
   {
     name: "MTAR Technologies Limited",
@@ -142,14 +108,8 @@ export const SEED: SeedCompany[] = [
     basis: "consolidated",
     revenueSourceUrl: "https://mtar.in/wp-content/uploads/2026/05/Press-Release-Q4-FY-26.pdf",
     revenueSourceType: "company_site",
-    executives: [
-      {
-        persona: "CEO_FOUNDER",
-        title: "Managing Director",
-        hits: [hit("P. Srinivas Reddy", "https://mtar.in/management-team/", "company_site")],
-      },
-    ],
-    review: "HR, CSR, marketing, and procurement are blank. A LinkedIn post names an HR leader and is not used. The CFO is on the management page and is not a gifting persona.",
+    executives: [],
+    review: "The management page does not name an HR head. A LinkedIn post is not used as a source, so the HR cell stays blank.",
   },
   {
     name: "Zen Technologies Limited",
@@ -162,21 +122,9 @@ export const SEED: SeedCompany[] = [
     basis: "consolidated",
     revenueSourceUrl: `${MC}/zentechnologies-ZT01/`,
     revenueSourceType: "moneycontrol",
-    executives: [
-      {
-        persona: "CEO_FOUNDER",
-        title: "Chairman and Managing Director",
-        hits: [
-          hit(
-            "Ashok Atluri",
-            "https://www.zentechnologies.com/assets/uploads/files/change-in-management-on-2-feb-2026.pdf",
-            "exchange_filing",
-          ),
-        ],
-      },
-    ],
+    executives: [],
     review:
-      "HR is blank. Gowri Chintala Siddamshetty resigned as CHRO on 4 July 2025 (https://www.zentechnologies.com/assets/uploads/files/change-in-senior-management-personnel.pdf). No successor is in the filings used here. Confirm the May 2026 reappointment of Ashok Atluri before a letter.",
+      "Gowri Chintala Siddamshetty resigned as CHRO on 4 July 2025 (https://www.zentechnologies.com/assets/uploads/files/change-in-senior-management-personnel.pdf). No successor is in the filings used here, so the HR cell stays blank.",
   },
   {
     name: "Exicom Tele-Systems Limited",
@@ -195,13 +143,7 @@ export const SEED: SeedCompany[] = [
         title: "Head of HR",
         hits: [hit("Pooja Duggal", "https://www.exicom.com/investors", "company_site")],
       },
-      {
-        persona: "CEO_FOUNDER",
-        title: "Managing Director and CEO",
-        hits: [hit("Anant Nahata", "https://www.exicom.com/investors", "company_site")],
-      },
     ],
-    review: "CSR, marketing, and procurement are blank. Moneycontrol’s standalone sales are ₹894 crore. The group figure above is the one stored.",
   },
   {
     name: "Azad Engineering Limited",
@@ -215,7 +157,7 @@ export const SEED: SeedCompany[] = [
     revenueSourceUrl: `${MC}/azadengineering-AEL02/`,
     revenueSourceType: "moneycontrol",
     executives: [],
-    review: "The team page names a CFO and does not name an HR, CSR, marketing, or procurement head. The CEO is only on an aggregator, so the name is not stored.",
+    review: "The team page does not name an HR head, so the HR cell stays blank.",
   },
   { ...mc("windsormachines-WM01", 570, "consolidated"), name: "Windsor Machines Limited", website: "https://windsormachines.com/" },
   { ...mc("kilburnengineering-KE03", 628, "consolidated"), name: "Kilburn Engineering Limited", website: "https://www.kilburnengg.com/" },

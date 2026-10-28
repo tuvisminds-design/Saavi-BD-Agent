@@ -52,9 +52,9 @@ export default async function CompanyPage({
       ) : null}
 
       <section className="mt-8">
-        <h2 className="font-heading text-2xl">Buying committee</h2>
+        <h2 className="font-heading text-2xl">HR head</h2>
         <ul className="mt-4 flex flex-col gap-4">
-          {(["CEO_FOUNDER", "HR", "CSR", "MARKETING", "PROCUREMENT"] as const).map((persona) => {
+          {(["HR"] as const).map((persona) => {
             const executive = executives.find((row) => row.persona === persona)
             const sources = executive ? evidence.filter((row) => row.executiveId === executive.id) : []
             const search = executive?.full_name ? linkedInSearchLink(executive.full_name, company.name) : null

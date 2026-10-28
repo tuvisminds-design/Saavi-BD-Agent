@@ -4,16 +4,8 @@ export const MAIN_HEADERS = [
   "Company Name",
   "Revenue",
   "Location",
-  "CEO / Founder Name",
-  "CEO / Founder LinkedIn",
   "HR Head Name",
   "HR Head LinkedIn",
-  "CSR Head Name",
-  "CSR Head LinkedIn",
-  "Marketing / Brand Head Name",
-  "Marketing / Brand Head LinkedIn",
-  "Procurement / Admin Head Name",
-  "Procurement / Admin Head LinkedIn",
 ] as const
 
 export const EXTRA_HEADERS = [
@@ -30,11 +22,7 @@ export const EXTRA_HEADERS = [
   "Tag (HOT/WARM)",
   "Latest Trigger Signal",
   "Signal Date",
-  "CEO / Founder LinkedIn Search",
   "HR Head LinkedIn Search",
-  "CSR Head LinkedIn Search",
-  "Marketing / Brand Head LinkedIn Search",
-  "Procurement / Admin Head LinkedIn Search",
   "LinkedIn Status (pending/pasted)",
 ] as const
 
@@ -67,14 +55,12 @@ export type ExportCompany = {
   executives: ExportExecutive[]
 }
 
-const PERSONA_ORDER = ["CEO_FOUNDER", "HR", "CSR", "MARKETING", "PROCUREMENT"] as const
-
-function byPersona(company: ExportCompany, persona: (typeof PERSONA_ORDER)[number]) {
-  return company.executives.find((row) => row.persona === persona)
+function hrOf(company: ExportCompany) {
+  return company.executives.find((row) => row.persona === "HR")
 }
 
 function rowStatus(company: ExportCompany) {
-  const named = company.executives.filter((row) => row.name)
+  const named = company.executives.filter((row) => row.persona === "HR" && row.name)
   if (named.some((row) => row.status === "CONFLICT")) return "CONFLICT"
   if (named.some((row) => row.status === "MEDIUM")) return "MEDIUM"
   if (named.some((row) => row.status === "VERIFIED")) return "VERIFIED"
@@ -82,19 +68,14 @@ function rowStatus(company: ExportCompany) {
 }
 
 function linkedInStatus(company: ExportCompany) {
-  const named = company.executives.filter((row) => row.name)
+  const named = company.executives.filter((row) => row.persona === "HR" && row.name)
   if (named.length === 0) return ""
   return named.every((row) => row.linkedinUrl) ? "pasted" : "pending"
 }
 
 export function companyToRow(company: ExportCompany): (string | number | null)[] {
-  const cells: (string | null)[] = []
-  for (const persona of PERSONA_ORDER) {
-    const executive = byPersona(company, persona)
-    cells.push(executive?.name ?? "")
-    cells.push(executive?.linkedinUrl ?? "")
-  }
-  const named = company.executives.filter((row) => row.name)
+  const executive = hrOf(company)
+  const named = executive?.name ? [executive] : []
   const confidence = named.reduce<number | null>((min, row) => {
     if (row.confidence === null) return min
     return min === null ? row.confidence : Math.min(min, row.confidence)
@@ -112,7 +93,8 @@ export function companyToRow(company: ExportCompany): (string | number | null)[]
     company.name,
     company.revenue,
     company.location,
-    ...cells,
+    executive?.name ?? "",
+    executive?.linkedinUrl ?? "",
     company.industry,
     company.headcount,
     company.website,
@@ -126,7 +108,7 @@ export function companyToRow(company: ExportCompany): (string | number | null)[]
     company.tag,
     company.signal,
     company.signalDate,
-    ...PERSONA_ORDER.map((persona) => byPersona(company, persona)?.searchLink ?? ""),
+    executive?.searchLink ?? "",
     linkedInStatus(company),
   ]
 }

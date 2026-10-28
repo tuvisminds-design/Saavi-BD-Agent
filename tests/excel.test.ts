@@ -6,8 +6,9 @@ import ExcelJS from "exceljs"
 import { buildWorkbook, EXPORT_HEADERS, MAIN_HEADERS } from "../lib/prospecting/excel"
 
 describe("excel export", () => {
-  it("keeps the thirteen buyer columns in the specified order", async () => {
-    assert.deepEqual(EXPORT_HEADERS.slice(0, 13), [...MAIN_HEADERS])
+  it("exports the HR head and leaves every other seat out", async () => {
+    assert.deepEqual(EXPORT_HEADERS.slice(0, 5), [...MAIN_HEADERS])
+    assert.equal((EXPORT_HEADERS as readonly string[]).includes("CEO / Founder Name"), false)
     const bytes = await buildWorkbook({
       companies: [
         {
@@ -45,10 +46,10 @@ describe("excel export", () => {
     const sheet = workbook.getWorksheet("Companies")
     assert.ok(sheet)
     assert.equal(sheet.getRow(1).getCell(1).value, "Company Name")
-    assert.equal(sheet.getRow(1).getCell(6).value, "HR Head Name")
-    assert.equal(sheet.getRow(1).getCell(13).value, "Procurement / Admin Head LinkedIn")
-    assert.equal(sheet.getRow(2).getCell(6).value, "A Person")
-    assert.equal(sheet.getRow(2).getCell(7).value, "")
+    assert.equal(sheet.getRow(1).getCell(4).value, "HR Head Name")
+    assert.equal(sheet.getRow(1).getCell(5).value, "HR Head LinkedIn")
+    assert.equal(sheet.getRow(2).getCell(4).value, "A Person")
+    assert.equal(sheet.getRow(2).getCell(5).value, "")
     assert.ok(workbook.getWorksheet("Review Queue"))
     assert.ok(workbook.getWorksheet("Signals"))
   })

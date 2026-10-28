@@ -14,6 +14,7 @@ export type CompanyRow = {
   csr: string
   tag: string
   status: string
+  hrName: string
 }
 
 const selectClass =
@@ -111,6 +112,7 @@ export function CompanyTable({ rows }: { rows: CompanyRow[] }) {
                   <th className="px-3 py-2 font-medium">Company</th>
                   <th className="px-3 py-2 font-medium">Revenue</th>
                   <th className="px-3 py-2 font-medium">Location</th>
+                  <th className="px-3 py-2 font-medium">HR head</th>
                   <th className="px-3 py-2 font-medium">Tag</th>
                   <th className="px-3 py-2 font-medium">CSR</th>
                   <th className="px-3 py-2 font-medium">Status</th>
@@ -126,6 +128,7 @@ export function CompanyTable({ rows }: { rows: CompanyRow[] }) {
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap">{row.revenueLabel}</td>
                     <td className="px-3 py-2">{row.location || "—"}</td>
+                    <td className="px-3 py-2">{row.hrName || "Blank"}</td>
                     <td className="px-3 py-2">{row.tag}</td>
                     <td className="px-3 py-2">{row.csr || "—"}</td>
                     <td className="px-3 py-2">{row.status}</td>
@@ -142,7 +145,7 @@ export function CompanyTable({ rows }: { rows: CompanyRow[] }) {
                 </Link>
                 <p className="mt-1 text-sm">{row.revenueLabel}</p>
                 <p className="text-sm text-muted-foreground">
-                  {row.location || "Location not filed here"} · {row.tag} · CSR {row.csr || "not confirmed"} · {row.status}
+                  HR {row.hrName || "blank"} · {row.location || "Location not filed here"} · {row.tag} · {row.status}
                 </p>
               </li>
             ))}

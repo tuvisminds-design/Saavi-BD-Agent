@@ -4,9 +4,9 @@ organization: Saavi
 site: https://saavi.tuvisminds.com/
 version: "1.0.0"
 capability: >
-  Find Indian companies in the corporate gifting band, verify the people who buy gifts,
-  keep LinkedIn profiles only after a Saavi rep pastes them, capture gifting and CSR signals,
-  and export the book to Excel.
+  Find Indian companies in the corporate gifting band and name the HR head only,
+  when a filing or the company site supports that name. LinkedIn profiles stay empty
+  until a Saavi rep pastes one. Capture gifting signals and export the HR book to Excel.
 owns:
   - companies
   - executives

@@ -152,6 +152,7 @@ export function seedDatabase(db: DatabaseSync) {
       })
     }
     for (const executive of company.executives) {
+      if (executive.persona !== "HR") continue
       insertExecutive(db, companyId, executive.persona, executive.title, executive.hits)
     }
     if (company.review) {
@@ -169,6 +170,8 @@ export function getDb() {
   const db = openDatabase(filename)
   const row = db.prepare("SELECT COUNT(*) AS count FROM companies").get() as { count: number }
   if (row.count === 0) seedDatabase(db)
+  db.prepare("DELETE FROM evidence WHERE executive_id IN (SELECT id FROM executives WHERE persona != 'HR')").run()
+  db.prepare("DELETE FROM executives WHERE persona != 'HR'").run()
   backfillListedEvents(db)
   singleton = db
   return db
@@ -302,7 +305,9 @@ export function toExportCompanies(db = getDb()): ExportCompany[] {
     tag: company.tag ?? "",
     signal: listSignals(db).find((signal) => signal.companyId === company.id)?.title ?? "",
     signalDate: listSignals(db).find((signal) => signal.companyId === company.id)?.publishedAt ?? "",
-    executives: listExecutives(company.id, db).map((executive) => ({
+    executives: listExecutives(company.id, db)
+      .filter((executive) => executive.persona === "HR")
+      .map((executive) => ({
       persona: executive.persona,
       name: executive.full_name,
       linkedinUrl: executive.linkedin_url,

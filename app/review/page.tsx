@@ -15,8 +15,8 @@ export default function ReviewPage() {
     <SiteShell current="/review">
       <h1 className="font-heading text-3xl text-balance md:text-4xl">Review queue</h1>
       <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-        Conflicts, missing buyer seats, and notes that a filing left a role empty. Accept keeps a verified name and
-        closes the note. Reject clears an executive name so the Excel cell stays blank.
+        Companies whose HR head is still blank, with the source note beside the company. Accept closes the note.
+        Reject clears an HR name so the Excel cell stays blank.
       </p>
       {items.length === 0 ? (
         <p className="mt-8 rounded-lg border border-dashed border-border px-4 py-8 text-sm text-muted-foreground">
