@@ -14,7 +14,9 @@ npm test
 npm run dev
 ```
 
-Open http://127.0.0.1:4179.
+Open the desk from this agent on port 4179: http://127.0.0.1:4179. The capability card is http://127.0.0.1:4179/pbc. That address works on the computer running the desk. A browser on another computer cannot reach it.
+
+The package is `pbc/saavi-prospecting.yaml`. Other Saavi software calls `/api/pbc` for the capability card, `/api/pbc/companies` for the book, and `/api/pbc/events` for the event channel.
 
 `npm run dev` writes `data/prospects.db` on first launch and seeds 20 companies. Delete that file to seed again.
 

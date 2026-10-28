@@ -1,0 +1,52 @@
+id: saavi.gifting.prospecting
+name: Saavi gifting prospecting
+organization: Saavi
+site: https://saavi.tuvisminds.com/
+version: "1.0.0"
+capability: >
+  Find Indian companies in the corporate gifting band, verify the people who buy gifts,
+  keep LinkedIn profiles only after a Saavi rep pastes them, capture gifting and CSR signals,
+  and export the book to Excel.
+owns:
+  - companies
+  - executives
+  - evidence
+  - signals
+  - review_items
+  - events
+apis:
+  - method: GET
+    path: /api/pbc
+    purpose: Capability card for this package
+  - method: GET
+    path: /api/pbc/companies
+    purpose: The gifting book
+  - method: GET
+    path: /api/pbc/events
+    purpose: Event channel
+  - method: POST
+    path: /api/pbc/linkedin
+    purpose: Paste a confirmed LinkedIn profile
+  - method: POST
+    path: /api/pbc/signals
+    purpose: Capture a gifting or CSR signal
+  - method: POST
+    path: /api/pbc/reviews
+    purpose: Accept or reject a review item
+  - method: DELETE
+    path: /api/pbc/companies/{id}
+    purpose: Remove a company and its evidence
+  - method: GET
+    path: /api/export
+    purpose: Excel workbook
+events:
+  - company.listed
+  - company.tagged
+  - company.removed
+  - linkedin.pasted
+  - signal.captured
+  - review.resolved
+rules:
+  - A name is stored only with a source URL from a filing, report, BRSR, or the company site.
+  - A LinkedIn profile URL is stored only after a person pastes it, or from a Sales Navigator export.
+  - This package does not request linkedin.com.

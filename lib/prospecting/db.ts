@@ -169,6 +169,7 @@ export function getDb() {
   const db = openDatabase(filename)
   const row = db.prepare("SELECT COUNT(*) AS count FROM companies").get() as { count: number }
   if (row.count === 0) seedDatabase(db)
+  backfillListedEvents(db)
   singleton = db
   return db
 }
@@ -346,6 +347,11 @@ export function pasteLinkedIn(input: {
     sourceType: "manual",
     retrievedAt: now.slice(0, 10),
   })
+  recordEvent(db, "linkedin.pasted", "executive", executive.id, {
+    companyId: executive.company_id,
+    linkedinSource: source,
+    pastedBy,
+  })
   return { ok: true as const }
 }
 
@@ -380,13 +386,22 @@ export function addManualSignal(input: {
   const company = db.prepare("SELECT tag, revenue_inr_crore FROM companies WHERE id = ?").get(input.companyId) as
     | { tag: string | null; revenue_inr_crore: number | null }
     | undefined
-  if (company && bandTag(company.revenue_inr_crore, true).tag === "HOT") {
+  const hot = company && bandTag(company.revenue_inr_crore, true).tag === "HOT"
+  if (hot) {
     db.prepare("UPDATE companies SET tag = 'HOT', updated_at = ? WHERE id = ?").run(new Date().toISOString(), input.companyId)
   }
+  recordEvent(db, "signal.captured", "company", input.companyId, {
+    title: input.title.trim(),
+    url: input.url.trim(),
+    score: scored.score,
+  })
+  if (hot) recordEvent(db, "company.tagged", "company", input.companyId, { tag: "HOT" })
   return { ok: true as const }
 }
 
 export function deleteCompany(id: number, db = getDb()) {
+  const company = db.prepare("SELECT name FROM companies WHERE id = ?").get(id) as { name: string } | undefined
+  if (company) recordEvent(db, "company.removed", "company", id, { name: company.name })
   db.prepare("DELETE FROM review_items WHERE entity_type = 'company' AND entity_id = ?").run(id)
   db.prepare(
     `DELETE FROM review_items WHERE entity_type = 'executive' AND entity_id IN (SELECT id FROM executives WHERE company_id = ?)`,
@@ -411,6 +426,45 @@ export function resolveReview(id: number, decision: "accepted" | "rejected", db 
     new Date().toISOString(),
     id,
   )
+  recordEvent(db, "review.resolved", item.entity_type, item.entity_id, { decision, reviewId: id })
+}
+
+export function recordEvent(
+  db: DatabaseSync,
+  type: string,
+  subjectType: string,
+  subjectId: number | null,
+  payload: Record<string, unknown>,
+) {
+  db.prepare(
+    `INSERT INTO events (type, subject_type, subject_id, payload, occurred_at) VALUES (?, ?, ?, ?, ?)`,
+  ).run(type, subjectType, subjectId, JSON.stringify(payload), new Date().toISOString())
+}
+
+function backfillListedEvents(db: DatabaseSync) {
+  const count = db.prepare("SELECT COUNT(*) AS count FROM events").get() as { count: number }
+  if (count.count > 0) return
+  const companies = db.prepare("SELECT id, name, tag FROM companies").all() as {
+    id: number
+    name: string
+    tag: string | null
+  }[]
+  for (const company of companies) {
+    recordEvent(db, "company.listed", "company", company.id, { name: company.name, tag: company.tag })
+  }
+}
+
+export function listEvents(db = getDb()) {
+  return (
+    db.prepare("SELECT id, type, subject_type AS subjectType, subject_id AS subjectId, payload, occurred_at AS occurredAt FROM events ORDER BY id DESC").all() as {
+      id: number
+      type: string
+      subjectType: string
+      subjectId: number | null
+      payload: string
+      occurredAt: string
+    }[]
+  ).map((event) => ({ ...event, payload: JSON.parse(event.payload) as Record<string, unknown> }))
 }
 
 export function dueForReverify(db: DatabaseSync, today: string) {

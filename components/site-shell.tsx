@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 const links = [
+  { href: "/pbc", label: "Saavi" },
   { href: "/", label: "Companies" },
   { href: "/review", label: "Review" },
   { href: "/signals", label: "Signals" },

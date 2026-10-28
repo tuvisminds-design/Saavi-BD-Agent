@@ -71,4 +71,13 @@ CREATE TABLE IF NOT EXISTS review_items (
   assignee TEXT,
   resolved_at TEXT
 );
+
+CREATE TABLE IF NOT EXISTS events (
+  id INTEGER PRIMARY KEY,
+  type TEXT NOT NULL,
+  subject_type TEXT NOT NULL,
+  subject_id INTEGER,
+  payload TEXT NOT NULL,
+  occurred_at TEXT NOT NULL
+);
 `
