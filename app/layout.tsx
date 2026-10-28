@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Inter, Playfair_Display } from "next/font/google"
 
 import { ThemeProvider } from "@/components/theme-provider"
@@ -19,7 +19,19 @@ const heading = Playfair_Display({
 export const metadata: Metadata = {
   title: "Saavi prospecting",
   description:
-    "Companies, verified gift buyers, and gifting signals for Saavi. LinkedIn profiles are pasted by a person.",
+    "HR heads for Saavi corporate gifting. LinkedIn profiles are pasted by a person.",
+  applicationName: "Saavi",
+  appleWebApp: {
+    capable: true,
+    title: "Saavi",
+    statusBarStyle: "default",
+  },
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#392616",
 }
 
 export default function RootLayout({

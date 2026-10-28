@@ -14,7 +14,7 @@ npm test
 npm run dev
 ```
 
-Open the desk from this agent on port 4179: http://127.0.0.1:4179. The capability card is http://127.0.0.1:4179/pbc. That address works on the computer running the desk. A browser on another computer cannot reach it.
+Open the desk from this agent on port 4179: http://127.0.0.1:4179. The phone app is http://127.0.0.1:4179/m. The capability card is http://127.0.0.1:4179/pbc. That address works on the computer running the desk. A browser on another computer cannot reach it.
 
 The package is `pbc/saavi-prospecting.yaml`. Other Saavi software calls `/api/pbc` for the capability card, `/api/pbc/companies` for the book, and `/api/pbc/events` for the event channel.
 

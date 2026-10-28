@@ -39,6 +39,9 @@ apis:
   - method: GET
     path: /api/export
     purpose: Excel workbook
+  - method: GET
+    path: /m
+    purpose: Phone app for the same Saavi book
 events:
   - company.listed
   - company.tagged
