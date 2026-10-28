@@ -1,0 +1,12 @@
+freshness_months: 12
+reverify_days: 90
+verified_confidence_min: 85
+medium_confidence_min: 60
+seasonal_multiplier_peak: 1.5
+seasonal_multiplier_approach: 1.25
+seasonal_multiplier_base: 1
+recency_max: 40
+recency_days: 30
+keyword_max: 30
+persona_max: 20
+icp_max: 10

@@ -1,0 +1,16 @@
+# Score is boosted from 10 weeks before the window through the end of the window.
+boost_weeks_before: 10
+windows:
+  - id: diwali
+    label: Diwali
+    months: [8, 9, 10]
+    note: The 2026 ordering window is largely closed. Diwali falls in early November.
+  - id: year_end
+    label: Year-end / New Year
+    months: [11, 12]
+  - id: womens_day_holi
+    label: Women's Day, Holi
+    months: [1, 2]
+  - id: raksha_bandhan
+    label: Raksha Bandhan / mid-year festive
+    months: [6, 7]

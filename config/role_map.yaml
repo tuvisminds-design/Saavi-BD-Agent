@@ -1,0 +1,3 @@
+# Titles are matched in lib/prospecting/role-map.ts against config/personas.yaml.
+# PROXY_TITLE is set when the matched phrase is listed under that persona's proxies.
+fallback_when_no_hr_or_csr: CEO_FOUNDER

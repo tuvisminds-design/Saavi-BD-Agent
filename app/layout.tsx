@@ -17,9 +17,9 @@ const heading = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: "Saavi lead qualification desk",
+  title: "Saavi prospecting",
   description:
-    "Persona, qualification, and decision-maker summaries for Saavi. HR, CEO, and CFO at Indian companies inside the Moneycontrol ₹500–1,000 crore band.",
+    "Companies, verified gift buyers, and gifting signals for Saavi. LinkedIn profiles are pasted by a person.",
 }
 
 export default function RootLayout({

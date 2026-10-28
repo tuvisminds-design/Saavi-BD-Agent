@@ -1,0 +1,80 @@
+# Primary gifting buyers. CEO and CFO are not the default seats.
+personas:
+  HR:
+    label: HR / People head
+    role: Initiator, owns budget
+    why: Festive and milestone gifting
+    cares: Employee delight, per-head budget, bulk delivery
+    objection: Can you deliver 2,000 gifts across cities on time?
+    titles:
+      - CHRO
+      - Chief Human Resource Officer
+      - Chief Human Resources Officer
+      - Head of Human Resources
+      - Head - Human Resources
+      - Head HR
+      - VP People
+      - VP-HR
+      - Head Total Rewards
+      - Head - Total Rewards
+      - Head Employee Engagement
+  CSR:
+    label: CSR / Sustainability head
+    role: Champion
+    why: Gifts with a measurable social story
+    cares: Impact metrics, artisan stories, reporting
+    objection: Can you give impact numbers for our ESG report?
+    titles:
+      - Head CSR
+      - Head of CSR
+      - Chief Sustainability Officer
+      - ESG Lead
+      - Foundation Head
+  MARKETING:
+    label: Marketing / Brand head
+    role: Influencer
+    why: Client and partner gifts
+    cares: Brand fit, customisation, premium packaging
+    objection: Can we brand it?
+    titles:
+      - CMO
+      - Chief Marketing Officer
+      - Head Marketing
+      - Head of Marketing
+      - Head Brand
+      - Head of Brand
+      - Head Corporate Communications
+  PROCUREMENT:
+    label: Procurement / Admin head
+    role: Gatekeeper
+    why: Vendor onboarding and purchase approval
+    cares: Price, vendor compliance, SLAs, invoicing
+    objection: Are you an empanelled vendor?
+    titles:
+      - CPO
+      - Chief Procurement Officer
+      - Head Procurement
+      - Head of Procurement
+      - Head Admin
+      - Admin Head
+      - Head of Admin
+      - Facilities Head
+    proxies:
+      - Head Admin
+      - Admin Head
+      - Head of Admin
+      - Facilities Head
+  CEO_FOUNDER:
+    label: CEO / Founder
+    role: Decision maker
+    why: Decides directly when the company is small or no HR or CSR head is public
+    cares: Relationships, speed
+    objection: Why Saavi over a bigger gifting vendor?
+    titles:
+      - CEO
+      - Chief Executive Officer
+      - Founder
+      - Managing Director
+      - Chairman and Managing Director
+      - Whole-time Director and CEO
+      - Whole time Director and CEO

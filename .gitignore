@@ -34,6 +34,10 @@ pnpm-debug.log*
 # vercel
 .vercel
 
+# local prospect file
+/data/*.db
+/data/*.db-*
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

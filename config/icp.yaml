@@ -1,0 +1,16 @@
+geographies: [India]
+priority_cities: [Pune, Mumbai, Bengaluru, Hyderabad, Delhi NCR]
+segments:
+  csr_obligated_companies:
+    rule: "net worth >= 500 cr OR turnover >= 1000 cr OR net profit >= 5 cr"
+    why: "social-impact gifting helps justify spend"
+  large_employers:
+    rule: "headcount >= 1000"
+  sme_founder_led:
+    revenue_inr_crore_min: 100
+    revenue_inr_crore_max: 500
+revenue_inr_crore_min: 100
+revenue_inr_crore_max: 5000
+revenue_basis: latest_filed_FY
+edge_band_ratio: 0.1
+exclude: [existing_customers, direct_competitors]

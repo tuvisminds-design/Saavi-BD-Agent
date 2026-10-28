@@ -1,41 +1,28 @@
-# Lead qualification desk
+# Saavi prospecting
 
-A working file for [Saavi](https://saavi.tuvisminds.com/), sustainable corporate gifting from Pune. It qualifies Indian companies whose deciding Moneycontrol sales are between ₹500 crore and ₹1,000 crore and that show an HR function in public sources.
+Internal sales desk for [Saavi](https://saavi.tuvisminds.com/) corporate gifting. It lists Indian companies in the ₹100–5,000 crore sales band, keeps gift-buyer names only when a filing or company page supports them, and exports the book to Excel.
 
-The buyer is HR, with the CEO and the CFO in the same pass. Industry does not decide the lead. The desk applies one score, from 0 to 1:
-
-- Above 0.80: highly qualified
-- 0.50 to 0.80: medium qualified
-- Under 0.50, outside the band, or with no HR evidence: cut off
-
-Pune adds points when a source shows a headquarters, a plant, or a branch. It is not a substitute for the revenue band or the HR seat. Familiar Pune manufacturers such as Thermax and Bharat Forge are above ₹1,000 crore on the latest Moneycontrol year, so they are cut off from this queue.
+LinkedIn profile URLs are pasted by a rep, or imported later from a Sales Navigator CSV. The app builds a people-search link and does not request linkedin.com.
 
 ## Run
 
-The app expects Node.js 26.11.1 or newer.
+Node.js 26.11.1.
 
 ```bash
-nvm install 26.11.1
-export PATH="$HOME/.nvm/versions/node/v26.11.1/bin:$PATH"
 npm install
+npm test
 npm run dev
 ```
 
-Open [http://127.0.0.1:4179](http://127.0.0.1:4179).
+Open http://127.0.0.1:4179.
 
-The React screens are rendered by the Node server. The same scores are available as JSON:
+`npm run dev` writes `data/prospects.db` on first launch and seeds 20 companies. Delete that file to seed again.
 
-- `GET /api/health`
-- `GET /api/summary`
-- `GET /api/accounts`
-- `GET /api/accounts/:slug`
+## What a rep does
 
-`npm run typecheck` checks TypeScript.
+1. Open a company. Named people show the source URL.
+2. Open the LinkedIn search link in a logged-in browser and paste the `/in/` profile, with your name.
+3. Capture a public gifting or CSR signal on the Signals page. A saved signal can move an in-band company from WARM to HOT.
+4. Export Excel. Medium-confidence rows are yellow. Blank cells were not verified.
 
-## Evidence
-
-- Revenue is the latest annual Sales line on Moneycontrol, in ₹ crore.
-- If that view is standalone and the company reports a larger group total, the group figure decides the band.
-- HR is a Head of HR, CHRO, or VP-HR named on a company page, a filing, or a public profile. A vacated HR office can stay medium. No HR evidence is a cutoff.
-- LinkedIn company pages and people searches verify identity and title. They are not scraped, and they do not set the revenue number.
-- A person is named only when a company page, a filing report, or a public profile names them.
+Owner defaults still in `config/icp.yaml`: India, priority cities Pune, Mumbai, Bengaluru, Hyderabad, and Delhi NCR, sales ₹100–5,000 crore. Confirm the band before a wider run.
